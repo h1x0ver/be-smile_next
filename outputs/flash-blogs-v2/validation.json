@@ -1,0 +1,110 @@
+[
+  {
+    "article": 1,
+    "language": "ru",
+    "words": 483,
+    "minutes": 3,
+    "seo_title_length": 40,
+    "seo_description_length": 152,
+    "headings": 6
+  },
+  {
+    "article": 1,
+    "language": "en",
+    "words": 566,
+    "minutes": 4,
+    "seo_title_length": 39,
+    "seo_description_length": 157,
+    "headings": 6
+  },
+  {
+    "article": 1,
+    "language": "az",
+    "words": 461,
+    "minutes": 3,
+    "seo_title_length": 47,
+    "seo_description_length": 151,
+    "headings": 6
+  },
+  {
+    "article": 2,
+    "language": "ru",
+    "words": 473,
+    "minutes": 3,
+    "seo_title_length": 49,
+    "seo_description_length": 144,
+    "headings": 6
+  },
+  {
+    "article": 2,
+    "language": "en",
+    "words": 548,
+    "minutes": 4,
+    "seo_title_length": 46,
+    "seo_description_length": 144,
+    "headings": 6
+  },
+  {
+    "article": 2,
+    "language": "az",
+    "words": 475,
+    "minutes": 3,
+    "seo_title_length": 47,
+    "seo_description_length": 155,
+    "headings": 6
+  },
+  {
+    "article": 3,
+    "language": "ru",
+    "words": 509,
+    "minutes": 3,
+    "seo_title_length": 48,
+    "seo_description_length": 150,
+    "headings": 6
+  },
+  {
+    "article": 3,
+    "language": "en",
+    "words": 580,
+    "minutes": 4,
+    "seo_title_length": 48,
+    "seo_description_length": 139,
+    "headings": 6
+  },
+  {
+    "article": 3,
+    "language": "az",
+    "words": 496,
+    "minutes": 3,
+    "seo_title_length": 45,
+    "seo_description_length": 155,
+    "headings": 6
+  },
+  {
+    "article": 4,
+    "language": "ru",
+    "words": 529,
+    "minutes": 3,
+    "seo_title_length": 45,
+    "seo_description_length": 148,
+    "headings": 6
+  },
+  {
+    "article": 4,
+    "language": "en",
+    "words": 606,
+    "minutes": 4,
+    "seo_title_length": 45,
+    "seo_description_length": 151,
+    "headings": 6
+  },
+  {
+    "article": 4,
+    "language": "az",
+    "words": 543,
+    "minutes": 4,
+    "seo_title_length": 50,
+    "seo_description_length": 156,
+    "headings": 6
+  }
+]

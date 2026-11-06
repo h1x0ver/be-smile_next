@@ -1,0 +1,306 @@
+/* ===== PREMIUM INTERACTION ANIMATIONS ===== */
+
+/* Smooth transition for all interactive elements */
+*[class*="hover:"],
+button,
+a,
+[role="button"] {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ===== CURSOR GLOW EFFECT ===== */
+@keyframes cursor-glow {
+  0% {
+    box-shadow: 0 0 20px rgba(176, 139, 87, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(176, 139, 87, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(176, 139, 87, 0.4);
+  }
+}
+
+button:active,
+a:active {
+  animation: cursor-glow 0.3s ease-out;
+}
+
+/* ===== SCROLL REVEAL ===== */
+@keyframes scroll-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(60px);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* ===== ENHANCED IMAGE HOVER ===== */
+.group img {
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+              filter 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.group:hover img {
+  transform: scale(1.08) rotate(2deg);
+  filter: brightness(1.1);
+}
+
+/* ===== PREMIUM BUTTON GLOW ===== */
+button[class*="primary"],
+button[class*="bg-[#111111]"] {
+  position: relative;
+  overflow: hidden;
+}
+
+button[class*="primary"]::before,
+button[class*="bg-[#111111]"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+button[class*="primary"]:hover::before,
+button[class*="bg-[#111111]"]:hover::before {
+  left: 100%;
+}
+
+/* ===== CARD SHADOW PROGRESSION ===== */
+.group {
+  transition: box-shadow 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.group:hover {
+  filter: drop-shadow(0 40px 80px rgba(0, 0, 0, 0.15));
+}
+
+/* ===== TEXT BLUR REVEAL ===== */
+@keyframes text-blur-fade-in {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    text-shadow: none;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  animation: text-blur-fade-in 0.8s ease-out both;
+}
+
+/* ===== PREMIUM BORDER ANIMATION ===== */
+@keyframes border-pulse {
+  0%, 100% {
+    border-color: rgba(176, 139, 87, 0.3);
+  }
+  50% {
+    border-color: rgba(176, 139, 87, 0.6);
+  }
+}
+
+.group[class*="border"]:hover {
+  animation: border-pulse 0.6s ease-in-out;
+}
+
+/* ===== GLASS MORPHISM HOVER ===== */
+.supports-[backdrop-filter\:blur\(0px\)] {
+  transition: background-color 0.4s ease, backdrop-filter 0.4s ease;
+}
+
+.supports-[backdrop-filter\:blur\(0px\)]:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+}
+
+/* ===== STAGGER ANIMATION FOR LISTS ===== */
+@keyframes list-item-reveal {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+li {
+  animation: list-item-reveal 0.5s ease-out both;
+}
+
+li:nth-child(1) { animation-delay: 0s; }
+li:nth-child(2) { animation-delay: 0.1s; }
+li:nth-child(3) { animation-delay: 0.2s; }
+li:nth-child(4) { animation-delay: 0.3s; }
+li:nth-child(5) { animation-delay: 0.4s; }
+li:nth-child(6) { animation-delay: 0.5s; }
+li:nth-child(7) { animation-delay: 0.6s; }
+li:nth-child(8) { animation-delay: 0.7s; }
+
+/* ===== PAGE TRANSITION ===== */
+@keyframes page-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+body {
+  animation: page-enter 0.6s ease-out;
+}
+
+/* ===== ENHANCED FORM FOCUS ===== */
+input:focus,
+textarea:focus,
+select:focus {
+  box-shadow: 0 0 30px rgba(176, 139, 87, 0.3);
+  transform: scale(1.02);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ===== SMOOTH SCROLL BEHAVIOR ===== */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ===== LOADING STATE ===== */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+[aria-busy="true"] {
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+/* ===== VISIBILITY ANIMATION ===== */
+@keyframes fade-in-scale {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+[data-visible="true"] {
+  animation: fade-in-scale 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ===== EMPHASIS PULSE ===== */
+@keyframes emphasis-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.emphasis,
+[class*="highlight"] {
+  animation: emphasis-pulse 2s ease-in-out infinite;
+}
+
+/* ===== ROTATION ANIMATION ===== */
+@keyframes smooth-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-rotate {
+  animation: smooth-rotate 20s linear infinite;
+}
+
+/* ===== PREMIUM LINK HOVER ===== */
+a[class*="text-"] {
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+a[class*="text-"]::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #b08b57, transparent);
+  transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+a[class*="text-"]:hover::after {
+  width: 100%;
+}
+
+/* ===== GRADIENT ANIMATION ===== */
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+[class*="bg-gradient"] {
+  background-size: 200% 200%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+/* ===== PREMIUM TRANSFORM ON SCROLL ===== */
+[data-scroll] {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ===== ENHANCE FOCUS-VISIBLE ===== */
+*:focus-visible {
+  outline: 2px solid #b08b57;
+  outline-offset: 2px;
+}
+
+/* ===== PREMIUM SELECTION ===== */
+::selection {
+  background-color: #b08b57;
+  color: white;
+  text-shadow: none;
+}
+
+::-moz-selection {
+  background-color: #b08b57;
+  color: white;
+}
