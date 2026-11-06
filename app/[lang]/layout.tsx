@@ -7,6 +7,8 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { LayoutClientComponents } from '../../components/LayoutClientComponents';
 import { getNavServiceGroups } from '@/lib/navigation';
+import PageLoader from '@/components/PageLoader';
+import { INTRO_BOOTSTRAP } from '@/lib/intro';
 
 type Lang = 'ru' | 'en' | 'az';
 
@@ -115,6 +117,7 @@ export default async function LangLayout({
   return (
     <html lang={safeLang} className="font-manrope" suppressHydrationWarning>
       <head>
+        <script id="besmile-intro-bootstrap" dangerouslySetInnerHTML={{ __html: INTRO_BOOTSTRAP }} />
         <link rel="preload" href="/fonts/a343f882a40d2cc9-s.p.07ce798a.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         {safeLang === "ru" && <link rel="preload" href="/fonts/d3fe2f289711ac3f-s.p.5cf2134c.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />}
         {safeLang === "az" && <link rel="preload" href="/fonts/6ab0db14f70d8ed6-s.p.7d02fb04.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />}
@@ -123,6 +126,7 @@ export default async function LangLayout({
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
       </head>
       <body>
+        <PageLoader lang={safeLang} />
         <Header lang={safeLang} serviceGroups={serviceGroups} />
         <main className="min-h-screen overflow-x-clip">{children}</main>
         <Footer lang={safeLang} />

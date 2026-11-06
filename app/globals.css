@@ -1216,6 +1216,49 @@ html[data-nav] .page-shine {
 .bs-doctor-dialog[data-closing="true"] {
   animation: doctor-dialog-out 0.18s ease both;
 }
+
+/* First visit only. CSS releases the overlay even if hydration fails. */
+.bs-intro { display: none; }
+html[data-bs-intro="play"] .bs-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 46%, #16698a0f, #c9a24d0b 28%, transparent 62%), #f8f6f1;
+  animation: bs-intro-dismiss 1.65s ease both;
+}
+.bs-intro-content { position: relative; display: flex; flex-direction: column; align-items: center; padding: 24px; }
+.bs-intro-mark { position: relative; width: 210px; height: 124px; display: grid; place-items: center; }
+.bs-intro-arc { width: 176px; height: 93px; animation: bs-intro-arc-out 0.28s ease 0.65s both; }
+.bs-intro-outline { stroke-dasharray: 1; stroke-dashoffset: 1; animation: bs-intro-draw 0.58s cubic-bezier(0.22,1,0.36,1) both; }
+.bs-intro-fill { animation: bs-intro-fade-in 0.25s ease 0.3s both; }
+.bs-intro-shine { animation: bs-intro-shine 0.65s ease 0.12s both; }
+.bs-intro-logo { position: absolute; inset: 0; width: 210px; height: 124px; animation: bs-intro-logo-in 0.38s cubic-bezier(0.22,1,0.36,1) 0.65s both; }
+.bs-intro-caption { display: grid; margin-top: 24px; text-align: center; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: #0008; }
+.bs-intro-caption > span { grid-area: 1 / 1; }
+.bs-intro-polish { animation: bs-intro-arc-out 0.2s ease 0.65s both; }
+.bs-intro-welcome { animation: bs-intro-logo-in 0.3s ease 0.78s both; }
+.bs-intro-progress { width: 132px; height: 3px; margin-top: 20px; overflow: hidden; border-radius: 99px; background: #16698a14; animation: bs-intro-arc-out 0.2s ease 0.7s both; }
+.bs-intro-progress > span { display: block; width: 42%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #c9a24d33, #c9a24d, #c9a24d33); animation: bs-intro-progress 0.85s ease both; }
+.bs-intro-skip { position: absolute; bottom: max(28px, env(safe-area-inset-bottom)); padding: 12px 18px; min-height: 44px; border-radius: 99px; color: #0008; font-size: 11px; letter-spacing: 0.12em; background: #fff8; border: 1px solid #0000000d; transition: color 0.2s, background-color 0.2s; }
+.bs-intro-skip:hover { color: #111; background: white; }
+.bs-intro-skip:focus-visible { outline: 2px solid #16698a; outline-offset: 4px; }
+@keyframes bs-intro-draw { to { stroke-dashoffset: 0; } }
+@keyframes bs-intro-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bs-intro-shine { from { transform: translateX(0); } to { transform: translateX(200px); } }
+@keyframes bs-intro-arc-out { to { opacity: 0; transform: translateY(-3px); } }
+@keyframes bs-intro-logo-in { from { opacity: 0; transform: translateY(6px) scale(0.985); } to { opacity: 1; transform: none; } }
+@keyframes bs-intro-progress { from { transform: translateX(-100%); } to { transform: translateX(340%); } }
+@keyframes bs-intro-dismiss {
+  0%, 78% { opacity: 1; visibility: visible; pointer-events: auto; }
+  100% { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-bs-intro="play"] .bs-intro { display: none; animation: none; }
+}
 @media (prefers-reduced-motion: reduce) {
   .bs-doctor-dialog,
   .bs-doctor-dialog .bs-doctor-backdrop,

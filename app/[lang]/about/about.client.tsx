@@ -56,6 +56,10 @@ function PremiumGlowCard({
 
   const glowX = useSpring(mouseX, { stiffness: 120, damping: 18, mass: 0.4 });
   const glowY = useSpring(mouseY, { stiffness: 120, damping: 18, mass: 0.4 });
+  const glowBackground = useTransform(
+    [glowX, glowY],
+    ([x, y]) => `radial-gradient(280px circle at ${x}px ${y}px, #16698a7e, transparent 55%)`
+  );
 
   const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (reduceMotion || !ref.current) return;
@@ -74,11 +78,7 @@ function PremiumGlowCard({
         <motion.div
           className="pointer-events-none absolute -inset-24 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
           style={{
-            background: useTransform(
-              [glowX, glowY],
-              ([x, y]) =>
-                `radial-gradient(280px circle at ${x}px ${y}px, #16698a7e, transparent 55%)`
-            ),
+            background: glowBackground,
           }}
         />
       )}
@@ -134,7 +134,7 @@ export default function AboutClient({ lang, title, aboutBlocks, faqItems = [], }
       <section className="relative z-10 px-4 pt-16 sm:px-6 sm:pt-20 lg:px-10 lg:pt-28">
         <div className="mx-auto max-w-[1600px]">
           <motion.div
-            initial={{ opacity: 0, y: reduceMotion ? 0 : 20 }}
+            initial={{ opacity: 1, y: reduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             className="mb-10 flex items-baseline justify-center gap-4 text-center sm:mb-14 sm:gap-8 lg:mb-16 lg:gap-[90px]"
@@ -153,7 +153,7 @@ export default function AboutClient({ lang, title, aboutBlocks, faqItems = [], }
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: reduceMotion ? 0 : 22 }}
+            initial={{ opacity: 1, y: reduceMotion ? 0 : 22 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
             className="mx-auto flex max-w-[980px] flex-col items-center text-center"
@@ -256,7 +256,7 @@ export default function AboutClient({ lang, title, aboutBlocks, faqItems = [], }
               ].map((item, idx) => (
                 <motion.div
                   key={item.num}
-                  initial={{ opacity: 0, y: reduceMotion ? 0 : 18 }}
+                  initial={{ opacity: 1, y: reduceMotion ? 0 : 18 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-80px" }}
                   transition={{
@@ -285,7 +285,7 @@ export default function AboutClient({ lang, title, aboutBlocks, faqItems = [], }
       {/* ===== CONTENT BLOCKS ===== */}
       <section className="relative z-10 px-4 pb-24 pt-16 sm:px-6 sm:pb-28 sm:pt-20 lg:px-10 lg:pb-36 lg:pt-28">
         <div className="mx-auto max-w-[1600px] space-y-12 sm:space-y-16 lg:space-y-24">
-          {aboutBlocks.map((block: any, index: number) => {
+          {aboutBlocks.map((block, index) => {
             const isImageLeft = index % 2 === 0;
 
             const translations = Array.isArray(block.translations)
@@ -295,8 +295,8 @@ export default function AboutClient({ lang, title, aboutBlocks, faqItems = [], }
                 : [];
 
             const t =
-              translations.find((tr: any) => tr.language === lang) ||
-              translations.find((tr: any) => tr.language === "en") ||
+              translations.find((tr) => tr.language === lang) ||
+              translations.find((tr) => tr.language === "en") ||
               translations[0] ||
               null;
 
@@ -311,7 +311,7 @@ export default function AboutClient({ lang, title, aboutBlocks, faqItems = [], }
             return (
               <motion.article
                 key={block.id ?? index}
-                initial={{ opacity: 0, y: reduceMotion ? 0 : 36 }}
+                initial={{ opacity: 1, y: reduceMotion ? 0 : 36 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -414,7 +414,7 @@ export default function AboutClient({ lang, title, aboutBlocks, faqItems = [], }
           <div className="mx-auto max-w-[1200px]">
             <motion.div
               initial={{
-                opacity: 0,
+                opacity: 1,
                 y: reduceMotion ? 0 : 24,
               }}
               whileInView={{
@@ -455,7 +455,7 @@ export default function AboutClient({ lang, title, aboutBlocks, faqItems = [], }
                 <motion.div
                   key={item.question}
                   initial={{
-                    opacity: 0,
+                    opacity: 1,
                     y: reduceMotion ? 0 : 18,
                   }}
                   whileInView={{
