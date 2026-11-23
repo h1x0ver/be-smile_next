@@ -1092,17 +1092,17 @@ html[data-nav] .page-shine {
   min-height: 0;
 }
 
-/* Gold booking button with a slow light sweep */
+/* Primary booking button */
 .bs-m-book {
-  background: linear-gradient(120deg, #e3c88f 0%, #c9a35f 45%, #b08b57 100%);
-  box-shadow: 0 18px 50px rgba(201, 163, 95, 0.28);
+  background: #111111;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
 }
 
 .bs-m-book::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.45) 50%, transparent 70%);
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.12) 50%, transparent 70%);
   transform: translateX(-120%);
   animation: bs-cta-shimmer 4.5s cubic-bezier(0.22, 1, 0.36, 1) 1.2s infinite;
 }

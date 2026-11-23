@@ -1,16 +1,16 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useState } from "react";
 
 /** Only the disclosure control needs hydration; the surrounding cards are HTML. */
-export default function ExpandableDescription({ description, wide, moreLabel, hideLabel }: {
+export default function ExpandableDescription({ id, description, wide, moreLabel, hideLabel }: {
+  id: string;
   description: string;
   wide: boolean;
   moreLabel: string;
   hideLabel: string;
 }) {
   const [open, setOpen] = useState(false);
-  const id = useId();
   return (
     <>
       <p id={id} className={`text-[14px] leading-6 text-black/66 transition-all duration-300 sm:text-[16px] sm:leading-7 sm:text-black/68 sm:line-clamp-none ${open ? "" : wide ? "line-clamp-3" : "line-clamp-2"}`}>

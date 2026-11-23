@@ -3,7 +3,6 @@
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
-type Lang = 'ru' | 'en' | 'az';
 
 // ⚡ Динамические импорты только на клиенте с ssr: false
 const WhatsAppButton = dynamic(() => import('@/components/WhatsAppButton'), {
@@ -11,19 +10,12 @@ const WhatsAppButton = dynamic(() => import('@/components/WhatsAppButton'), {
   ssr: false,
 });
 
-const BeSmileAssistant = dynamic(() => import('@/components/BeSmileAssistant.client'), {
-  loading: () => null,
-  ssr: false,
-});
 
-interface LayoutClientComponentsProps {
-  lang: Lang;
-}
 
 // ⚡ Floating widgets aren't needed for the first paint: load them when the
 // browser is idle or on the first user interaction, whichever comes first.
 // This keeps their JS off the critical path of the first page load.
-export function LayoutClientComponents({ lang }: LayoutClientComponentsProps) {
+export function LayoutClientComponents() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -55,8 +47,7 @@ export function LayoutClientComponents({ lang }: LayoutClientComponentsProps) {
       {/* ⚡ WhatsApp справа */}
       <WhatsAppButton />
 
-      {/* ⚡ AI Assistant слева */}
-      <BeSmileAssistant lang={lang} />
+
     </>
   );
 }

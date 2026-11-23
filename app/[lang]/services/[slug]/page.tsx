@@ -114,7 +114,7 @@ function getTranslation(data: any, lang: Lang) {
     if (key) map[key] = tr;
   }
 
-  return map[lang] || map[DEFAULT_LANG] || map.en || translations[0] || null;
+  return map[lang]?.title?.trim() ? map[lang] : null;
 }
 
 function getAssetUrl(asset: any): string | null {
@@ -399,7 +399,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
   const data = await getServiceBySlug(slug, lang);
 
-  if (!data) {
+  if (!data || !getTranslation(data, lang)) {
     return {
       title: "BeSmile Dental Clinic",
       description: "BeSmile Dental Clinic",
@@ -428,12 +428,11 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
     alternates: {
       canonical,
-      languages: {
-        az: buildUrl("az", slug),
-        ru: buildUrl("ru", slug),
-        en: buildUrl("en", slug),
-        "x-default": buildUrl(DEFAULT_LANG, slug),
-      },
+      languages: Object.fromEntries(
+        (["az", "ru", "en"] as Lang[])
+          .filter(language => getTranslation(data, language))
+          .map(language => [language, buildUrl(language, slug)])
+      ),
     },
 
     robots: {
@@ -491,7 +490,7 @@ export default async function ServicePage(props: PageProps) {
 
   const data = await getServiceBySlug(slug, lang);
 
-  if (!data) {
+  if (!data || !getTranslation(data, lang)) {
     notFound();
   }
 

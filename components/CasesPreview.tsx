@@ -117,7 +117,7 @@ export default function CasesPreview({
           </div>
 
           <Link
-            href={`/${lang}/cases`}
+            href={`/${lang}/before-after`}
             className="hidden rounded-full border border-[#111111] bg-[#111111] px-6 py-4 text-[10px] uppercase tracking-[0.26em] text-white shadow-[0_18px_50px_rgba(0,0,0,0.14)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-black lg:inline-flex"
           >
             {copy.cta}
@@ -164,7 +164,7 @@ export default function CasesPreview({
                 </p>
 
                 <Link
-                  href={`/${lang}/cases?case=${item.slug}`}
+                  href={`/${lang}/before-after?case=${item.slug}`}
                   className="mt-5 inline-flex text-[11px] uppercase tracking-[0.24em] text-black/52 transition-transform duration-300 group-hover:translate-x-1"
                 >
                   {copy.more}
@@ -176,7 +176,7 @@ export default function CasesPreview({
 
         <div className="mt-6 lg:hidden">
           <Link
-            href={`/${lang}/cases`}
+            href={`/${lang}/before-after`}
             className="inline-flex rounded-full border border-[#111111] bg-[#111111] px-6 py-4 text-[10px] uppercase tracking-[0.26em] text-white shadow-[0_18px_50px_rgba(0,0,0,0.14)]"
           >
             {copy.cta}

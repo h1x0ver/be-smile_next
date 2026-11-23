@@ -22,9 +22,9 @@ export function middleware(request: NextRequest) {
 
   if (!hasLang) {
     request.nextUrl.pathname = `/${defaultLang}${pathname === "/" ? "" : pathname}`;
-    // Old links without a language prefix move permanently (keeps their SEO weight);
-    // the bare domain stays a temporary redirect.
-    return NextResponse.redirect(request.nextUrl, pathname === "/" ? 307 : 308);
+    // The default language is fixed, so the root and legacy paths permanently
+    // consolidate into their localized URLs rather than retaining the source URL.
+    return NextResponse.redirect(request.nextUrl, 308);
   }
 
   return NextResponse.next();

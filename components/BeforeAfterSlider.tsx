@@ -72,6 +72,8 @@ export function BeforeAfterSlider({
 
   const reduceMotion = usePrefersReducedMotion();
   const playedRef = useRef(false);
+  const interactedRef = useRef(false);
+  const pointerFrame = useRef(0);
 
   const clip = useMemo(
     () => `inset(0 ${100 - pos}% 0 0 round 16px)`,
@@ -81,7 +83,10 @@ export function BeforeAfterSlider({
   const setPosSafe = useCallback((v: number) => {
     if (Math.abs(v - posRef.current) < 0.15) return;
     posRef.current = v;
-    setPos(v);
+    if (!pointerFrame.current) pointerFrame.current = requestAnimationFrame(() => {
+      pointerFrame.current = 0;
+      setPos(posRef.current);
+    });
   }, []);
 
   const setFromClientX = useCallback(
@@ -97,6 +102,8 @@ export function BeforeAfterSlider({
     [setPosSafe]
   );
 
+  useEffect(() => () => cancelAnimationFrame(pointerFrame.current), []);
+
   useEffect(() => {
     const t = window.setTimeout(() => setHint(false), 2200);
     return () => window.clearTimeout(t);
@@ -110,6 +117,7 @@ export function BeforeAfterSlider({
     const values = [initial, clamp(initial - 12, 10, 90), clamp(initial - 12, 10, 90), clamp(initial + 8, 10, 90), clamp(initial + 8, 10, 90), initial];
     const times = [0, 550, 600, 1150, 1200, 1750];
     const tick = (now: number) => {
+      if (interactedRef.current) return;
       if (!start) start = now;
       const elapsed = Math.min(now - start, 1750);
       let segment = 0;
@@ -141,6 +149,7 @@ export function BeforeAfterSlider({
       style={{ touchAction: "pan-y" }}
       onPointerDown={(e) => {
         if (e.button !== 0) return;
+        interactedRef.current = true;
         e.currentTarget.setPointerCapture(e.pointerId);
         setDragging(true);
         setHint(false);
@@ -161,6 +170,7 @@ export function BeforeAfterSlider({
           : e.key === "Home" ? 0 : e.key === "End" ? 100 : null;
         if (next === null) return;
         e.preventDefault();
+        interactedRef.current = true;
         setHint(false);
         setPosSafe(clamp(next, 0, 100));
       }}

@@ -129,7 +129,7 @@ function getPathWithoutLang(url: string) {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date();
+
 
   const pages = await getAllSiteUrls();
   const uniquePages = dedupePages(pages as SitePage[]).filter(
@@ -151,7 +151,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
       return {
         url: page.url,
-        lastModified: now,
+
         changeFrequency: getChangeFrequency(page),
         priority: getPriority(page),
         alternates: { languages },

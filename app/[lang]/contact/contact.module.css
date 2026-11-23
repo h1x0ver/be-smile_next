@@ -1,0 +1,120 @@
+.page { background: #f8f6f1; color: #292c25; font-family: "Manrope", "Manrope Fallback", sans-serif; }
+.container { max-width: 1680px; margin: auto; padding: 32px clamp(16px, 4vw, 64px) 64px; }
+.breadcrumb { display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: #877c68; }
+.hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: end; gap: clamp(32px, 6vw, 90px); padding: 40px 0 44px; }
+.hero > div { min-width: 0; }
+.eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 10px; letter-spacing: .15em; color: #8f7b57; line-height: 1.6; text-transform: uppercase; }
+.eyebrow > span { width: 6px; height: 6px; border-radius: 50%; background: #b09360; }
+
+
+.heroIntro { max-width: 560px; justify-self: end; }
+.heroIntro p { font-size: 15px; line-height: 1.85; color: #706959; }
+.heroActions { display: flex; align-items: center; flex-wrap: wrap; gap: 20px; margin-top: 24px; }
+.primary { display: inline-flex; align-items: center; justify-content: space-between; gap: 24px; padding: 16px 22px; min-height: 50px; background: #111111; border-radius: 30px; transition: background .2s; }
+.primary span, .primary svg { color: #fff; }
+.primary span { font-size: 12px; font-weight: 500; line-height: 1.5; }
+.primary svg { flex-shrink: 0; }
+.primary:hover { background: #000000; }
+.route { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 12px; color: #8c754d; }
+.contactGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.contactCard { min-width: 0; display: flex; flex-direction: column; padding: clamp(22px, 2vw, 32px); border: 1px solid #ffffff; border-radius: 24px; background: linear-gradient(140deg,#ffffffc4,#efe8d685); box-shadow: inset 0 0 0 1px #c7b69622, 0 8px 30px #59452605; backdrop-filter: blur(12px); transition: border-color .2s, background .2s; }
+.contactCard:hover { border-color: #c7b28a; background: #fffaf1; }
+.cardTop { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 30px; }
+.icon { display: grid; place-items: center; height: 46px; width: 46px; border: 1px solid #d9ceb8; border-radius: 50%; color: #9c8151; background: #ffffff66; }
+.cardArrow { color: #ac9976; transition: transform .2s; }
+.contactCard:hover .cardArrow { transform: translate(2px,-2px); }
+.label { font-size: 11px; color: #8a7d66; line-height: 1.6; }
+.contactCard h2 { font-size: clamp(17px, 1.5vw, 25px); line-height: 1.4; font-weight: 500; letter-spacing: -.035em; margin: 10px 0 14px; overflow-wrap: anywhere; }
+.contactCard p { margin-top: auto; max-width: 270px; font-size: 12px; line-height: 1.8; color: #877b65; }
+.locationSection { margin-top: 64px; border-top: 1px solid #dcd4c4; padding-top: 30px; }
+.sectionHeading { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 28px; }
+.sectionHeading h2 { font-size: clamp(30px, 3vw, 44px); line-height: 1.15; font-weight: 400; letter-spacing: -.04em; margin-top: 10px; }
+.sectionHeading > span { font-size: 12px; line-height: 1.8; color: #8d8068; max-width: 320px; }
+.locationGrid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 28px; align-items: stretch; }
+.mapCard { min-width: 0; overflow: hidden; border: 1px solid #ded6c6; border-radius: 24px; background: #ffffffa8; display: flex; flex-direction: column; }
+.mapTop, .mapBottom { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 20px 24px; }
+.mapTop { border-bottom: 1px solid #e2dac9; }
+.mapTop > span, .mapTop a, .mapBottom a { display: inline-flex; align-items: center; gap: 10px; font-size: 11px; line-height: 1.6; }
+.mapTop > span { color: #76684c; }
+.mapTop a, .mapBottom a { color: #957a49; }
+.mapBottom { border-top: 1px solid #e2dac9; }
+.mapBottom > span { font-size: 12px; color: #736751; }
+.map { position: relative; flex: 1; min-height: 360px; background: #eae7dc; }
+.map iframe { display: block; width: 100%; height: 100%; min-height: 360px; border: 0; position: absolute; inset: 0; }
+.visitCard { display: flex; flex-direction: column; min-width: 0; padding: clamp(24px, 3vw, 40px); border: 1px solid #fff; border-radius: 24px; background: linear-gradient(135deg,#ffffffb3,#eee5d1a8); box-shadow: inset 0 0 0 1px #c5b18c24; backdrop-filter: blur(14px); }
+.address { display: flex; align-items: start; gap: 16px; margin-top: 28px; }
+.address > svg { color: #a08758; flex-shrink: 0; margin-top: 3px; }
+.address address { font-style: normal; min-width: 0; }
+.address h3 { font-size: clamp(22px, 2.3vw, 30px); line-height: 1.3; letter-spacing: -.035em; font-weight: 400; overflow-wrap: anywhere; }
+.address p { font-size: 12px; line-height: 1.7; color: #95856a; margin-top: 10px; }
+.hours { border-top: 1px solid #daceb6; border-bottom: 1px solid #daceb6; padding-block: 22px; margin-top: 28px; }
+.hoursLabel { display: flex; align-items: center; gap: 10px; font-size: 11px; color: #9a8359; }
+.schedule { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px 20px; justify-content: space-between; margin-top: 14px; }
+.schedule span { font-size: 12px; color: #79705f; line-height: 1.7; }
+.schedule strong { font-size: 20px; font-weight: 500; color: #4d4d3e; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.visitNote { margin-block: 24px; }
+.visitNote h3 { font-size: 14px; font-weight: 500; }
+.visitNote p { font-size: 13px; line-height: 1.85; color: #877a62; margin-top: 10px; }
+.mapRoute { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: auto; padding: 15px 20px; min-height: 48px; border: 1px solid #cdbc9b; border-radius: 30px; background: #fff8; color: #8f7342; font-size: 12px; }
+.closing { display: flex; align-items: center; gap: 28px; margin-top: 48px; padding: 34px; background: #ece6d780; border: 1px solid #fff; border-radius: 24px; }
+.closingIcon { width: 62px; height: 62px; display: grid; place-items: center; border: 1px solid #d7c8a8; border-radius: 50%; color: #9b8051; flex-shrink: 0; }
+.closing > div { min-width: 0; }
+.closing h2 { font-size: clamp(23px, 2.4vw, 32px); font-weight: 400; line-height: 1.25; letter-spacing: -.035em; }
+.closing p { max-width: 600px; font-size: 13px; line-height: 1.8; color: #867960; margin-top: 10px; }
+.closing > a { flex-shrink: 0; margin-left: auto; }
+.page a:focus-visible { outline: 2px solid #9c7f49; outline-offset: 4px; }
+@media (max-width: 1099px) {
+  .contactGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .contactCard h2 { font-size: 25px; }
+  .locationGrid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; }
+  .closing { flex-wrap: wrap; }
+  .closing > div { flex: 1; }
+  .closing > a { margin-left: 90px; }
+}
+@media (max-width: 767px) {
+  .container { padding-top: 22px; padding-bottom: 40px; }
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 28px 0 30px; }
+  
+  .heroIntro { justify-self: start; max-width: 600px; }
+  .heroIntro p { font-size: 14px; }
+  .heroActions { gap: 16px; margin-top: 20px; }
+  .contactGrid { gap: 16px; }
+  .contactCard { padding: 22px; border-radius: 20px; }
+  .contactCard h2 { font-size: 23px; }
+  .cardTop { margin-bottom: 22px; }
+  .locationSection { margin-top: 40px; padding-top: 24px; }
+  .sectionHeading { align-items: start; flex-direction: column; gap: 16px; }
+  .sectionHeading > span { max-width: 500px; }
+  .locationGrid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .visitCard { order: -1; padding: 24px; }
+  .address { margin-top: 22px; }
+  .mapTop, .mapBottom { padding: 18px; gap: 14px; }
+  .mapBottom { flex-wrap: wrap; }
+  .map, .map iframe { min-height: 330px; }
+  .closing { margin-top: 32px; padding: 24px; gap: 20px; }
+  .closingIcon { display: none; }
+  .closing > div { flex-basis: 100%; }
+  .closing > a { margin-left: 0; }
+}
+@media (max-width: 639px) {
+  .contactGrid { grid-template-columns: minmax(0, 1fr); }
+  .contactCard { display: grid; grid-template-columns: 1fr; position: relative; padding-left: 82px; min-height: 160px; }
+  .cardTop { position: absolute; top: 23px; left: 20px; margin: 0; }
+  .cardArrow { display: none; }
+  .icon { height: 42px; width: 42px; }
+  .contactCard h2 { font-size: clamp(18px, 5.5vw, 24px); margin-block: 8px 10px; }
+  .contactCard p { font-size: 12px; }
+  .heroActions { align-items: stretch; flex-direction: column; gap: 10px; }
+  .route { justify-content: center; }
+  .closing > a { width: 100%; }
+  .mapTop > span, .mapTop a { font-size: 10px; gap: 6px; }
+}
+@media (prefers-reduced-motion: reduce) { .primary, .contactCard, .cardArrow { transition: none; } }
+
+:global(body:has([data-contact-page]) [data-contact="whatsapp"]) { right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); }
+:global(body:has([data-contact-page]) [data-contact="whatsapp"] > button) { width: 48px; height: 48px; padding: 4px; gap: 0; justify-content: center; }
+:global(body:has([data-contact-page]) [data-contact="whatsapp"] > button > span:nth-last-child(-n+2)) { display: none; }
+:global(body:has([data-contact-page]) [data-contact="whatsapp"] > button > span:nth-child(4)) { width: 38px; height: 38px; }
+:global(body:has([data-contact-page]) [data-contact="whatsapp"] .animate-ping) { animation: none; }
+:global(body:has([data-contact-page]) footer) { padding-bottom: 80px; }
+:global(body:has([data-contact-page]):has(header [aria-expanded="true"]) [data-contact]) { visibility: hidden; }

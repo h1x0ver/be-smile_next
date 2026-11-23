@@ -35,6 +35,8 @@ type DoctorTranslation = {
   language?: string;
   languages_code?: string;
   name?: string;
+  firstname?: string;
+  lastname?: string;
   description?: string;
   specialization?: string;
   position?: string;
@@ -252,14 +254,14 @@ const DoctorCard = memo(function DoctorCard({
   return (
     <CarouselItem
       key={doctor.id}
-      className="pl-5 shrink-0 basis-[88%] sm:basis-[72%] lg:basis-[46%] xl:basis-[38%] [transform:translate3d(0,0,0)]"
+      className="home-doctor-slide pl-5 shrink-0 basis-[88%] sm:basis-[72%] lg:basis-[46%] xl:basis-[38%] [transform:translate3d(0,0,0)]"
     >
       <Reveal as="article" delay={Math.min(index * 65, 195)}
 
-        className="group relative isolate overflow-hidden rounded-[34px] border border-white/60 bg-white/30 shadow-[0_18px_60px_rgba(0,0,0,0.07)] transition-[translate,box-shadow,background-color,border-color,color] duration-500 hover:-translate-y-1 hover:shadow-[0_24px_80px_rgba(0,0,0,0.12)]"
+        className="home-doctor-card group relative isolate overflow-hidden rounded-[34px] border border-white/60 bg-white/30 shadow-[0_18px_60px_rgba(0,0,0,0.07)] transition-[translate,box-shadow,background-color,border-color,color] duration-500 hover:-translate-y-1 hover:shadow-[0_24px_80px_rgba(0,0,0,0.12)]"
         style={cardBaseStyle}
       >
-        <div className="relative h-[520px] overflow-hidden sm:h-[560px] lg:h-[620px]">
+        <div data-home="doctor-photo" className="relative h-[520px] overflow-hidden sm:h-[560px] lg:h-[620px]">
           <img
             src={directusImage(doctor.imageId, 720)}
             srcSet={directusSrcSet(doctor.imageId, [480, 720, 960])}
@@ -301,7 +303,7 @@ const DoctorCard = memo(function DoctorCard({
             </div>
           </div>
 
-          <div className="absolute inset-x-5 bottom-5">
+          <div data-home="doctor-info" className="absolute inset-x-5 bottom-5">
             <button
               type="button"
               onClick={handleOpen}
@@ -333,7 +335,7 @@ const DoctorCard = memo(function DoctorCard({
                   {doctor.shortDescription}
                 </p>
 
-                <div className="mt-5 flex items-center justify-between gap-4">
+                <div data-home="doctor-actions" className="mt-5 flex items-center justify-between gap-4">
                   <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-3 py-2 text-[10px] uppercase tracking-[0.28em] text-white/58">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#d7bd92]" />
                     {copy.modalLabel}
@@ -399,7 +401,7 @@ export default function DoctorsCarousel({
           id: doctor.id,
           imageId: doctor.image.id,
           imagePosition: doctor.image_position || '50% 14%',
-          name: t.name || 'Doctor',
+          name: t.name || [t.firstname, t.lastname].filter(Boolean).join(' ') || copy.expert,
           role: t.specialization || t.position || copy.badge,
           shortDescription: truncateText(plainText, 105),
           fullDescription: safeHtml,
@@ -408,7 +410,7 @@ export default function DoctorsCarousel({
         };
       })
       .filter(Boolean) as SlideDoctor[];
-  }, [doctors, lang, copy.badge, copy.fallbackDescription]);
+  }, [doctors, lang, copy.badge, copy.expert, copy.fallbackDescription]);
 
   const filteredSlides = slides;
 
@@ -426,7 +428,7 @@ export default function DoctorsCarousel({
     <>
       <>
         <>
-          <section className="relative overflow-hidden bg-[#f8f6f1] px-4 pb-20 pt-12 sm:px-6 md:px-10 lg:px-16 xl:px-20 lg:pb-28 lg:pt-16">
+          <section data-home="doctors" className="relative overflow-hidden bg-[#f8f6f1] px-4 pb-20 pt-12 sm:px-6 md:px-10 lg:px-16 xl:px-20 lg:pb-28 lg:pt-16">
             <div className="pointer-events-none absolute inset-0">
               <div
                 className={[
@@ -452,7 +454,7 @@ export default function DoctorsCarousel({
                 <div
 
                   className={[
-                    'relative overflow-hidden rounded-[28px] border border-white/60 bg-white/58 px-5 py-5 sm:rounded-[32px] sm:px-7 sm:py-6 lg:px-8 lg:py-7',
+                    'home-section-header relative overflow-hidden rounded-[28px] border border-white/60 bg-white/58 px-5 py-5 sm:rounded-[32px] sm:px-7 sm:py-6 lg:px-8 lg:py-7',
                     isLowEnd
                       ? ' shadow-[0_16px_50px_rgba(0,0,0,0.06)]'
                       : ' shadow-[0_20px_80px_rgba(0,0,0,0.07)]',
@@ -485,7 +487,7 @@ export default function DoctorsCarousel({
 
                     <div className="mt-4 h-px w-full bg-[linear-gradient(to_right,rgba(17,17,17,0.14),rgba(17,17,17,0.04),transparent)]" />
 
-                    <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div data-home="header-notes" className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                       <div className="flex flex-wrap items-center gap-2.5">
                         <div
                           className={[
@@ -521,8 +523,8 @@ export default function DoctorsCarousel({
               </div>
 
               <div className="relative">
-                <Carousel opts={{ align: 'start', loop: true }} className="relative select-none touch-pan-y [transform:translate3d(0,0,0)]">
-                  <div className="mb-5 hidden items-center justify-between lg:flex">
+                <Carousel opts={{ align: 'start', loop: true, duration: 32 }} className="relative select-none touch-pan-y [transform:translate3d(0,0,0)]">
+                  <div data-home="doctor-toolbar" className="mb-5 flex items-center justify-between gap-3">
                     <div className="text-[10px] uppercase tracking-[0.28em] text-black/36">
                       {copy.eyebrow}
                     </div>

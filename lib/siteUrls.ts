@@ -1,4 +1,4 @@
-import { getServices, getCases, getBlogPosts } from "@/lib/directus";
+import { getServices, getBlogPosts } from "@/lib/directus";
 
 export type Lang = "az" | "ru" | "en";
 
@@ -74,33 +74,16 @@ export async function getAllSiteUrls() {
         const slug = getSlug(service);
         if (!slug) continue;
 
-        const tr = getTranslation(service, lang);
+        const tr = service.translations?.find((translation: any) =>
+          (translation.language || translation.languages_code) === lang && translation.title?.trim()
+        );
+        if (!tr) continue;
 
         pages.push({
           type: "service",
           lang,
           name: tr?.seo_title || tr?.title || slug,
           url: `${SITE_URL}/${lang}/services/${slug}`,
-        });
-      }
-    }
-  }
-
-  for (const lang of LANGS) {
-    const cases = await getCases(lang).catch(() => []);
-
-    if (Array.isArray(cases)) {
-      for (const item of cases) {
-        const slug = getSlug(item);
-        if (!slug) continue;
-
-        const tr = getTranslation(item, lang);
-
-        pages.push({
-          type: "case",
-          lang,
-          name: tr?.title || item?.title || slug,
-          url: `${SITE_URL}/${lang}/before-after/${slug}`,
         });
       }
     }

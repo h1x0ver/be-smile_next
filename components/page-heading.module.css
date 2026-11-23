@@ -1,0 +1,21 @@
+.title.title {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2.4vw, 40px);
+  max-width: 100%;
+  margin: 22px 0 24px;
+  color: #111111;
+  font-family: "Manrope", "Manrope Fallback", sans-serif;
+  font-size: clamp(32px, 4.2vw, 72px);
+  font-weight: 300;
+  line-height: 1.25;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.title > .bracket { flex: 0 0 auto; color: inherit; font-weight: 300; letter-spacing: 0; }
+.label { min-width: 0; color: inherit; overflow-wrap: anywhere; text-wrap: balance; }
+.title.title[data-compact] { font-size: clamp(28px, 3.6vw, 60px); letter-spacing: .025em; gap: clamp(12px, 1.8vw, 28px); }
+@media (max-width: 599px) {
+  .title.title { font-size: clamp(25px, 6.8vw, 40px); gap: 12px; letter-spacing: .1em; margin-block: 20px 24px; line-height: 1.4; }
+  .title.title[data-compact] { font-size: clamp(25px, 6.8vw, 36px); letter-spacing: .015em; }
+}

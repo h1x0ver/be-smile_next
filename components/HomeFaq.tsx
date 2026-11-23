@@ -46,11 +46,12 @@ export default function HomeFaq({
 
   return (
     <section
+      data-home="faq"
       id="faq"
       aria-labelledby="home-faq-title"
       className="relative mx-auto max-w-[1520px] px-4 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-24"
     >
-      <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
+      <div data-home="faq-grid" className="grid gap-10 lg:grid-cols-12 lg:gap-14">
         <div className="lg:col-span-5">
           <Reveal className="lg:sticky lg:top-28">
             <div className="flex items-center gap-3">

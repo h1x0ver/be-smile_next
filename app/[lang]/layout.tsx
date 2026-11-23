@@ -8,7 +8,9 @@ import Footer from '@/components/layout/Footer';
 import { LayoutClientComponents } from '../../components/LayoutClientComponents';
 import { getNavServiceGroups } from '@/lib/navigation';
 import PageLoader from '@/components/PageLoader';
+import NavigationWarmup from '@/components/NavigationWarmup.client';
 import { INTRO_BOOTSTRAP } from '@/lib/intro';
+import { notFound } from 'next/navigation';
 
 type Lang = 'ru' | 'en' | 'az';
 
@@ -112,6 +114,7 @@ export default async function LangLayout({
 }) {
   const { lang } = await params;
   const safeLang = normalizeLang(lang);
+  if (!LANGS.includes(lang as Lang)) notFound();
   const serviceGroups = await getNavServiceGroups(safeLang);
 
   return (
@@ -130,7 +133,8 @@ export default async function LangLayout({
         <Header lang={safeLang} serviceGroups={serviceGroups} />
         <main className="min-h-screen overflow-x-clip">{children}</main>
         <Footer lang={safeLang} />
-        <LayoutClientComponents lang={safeLang} />
+        <LayoutClientComponents />
+        <NavigationWarmup />
 
         {/* Google Ads — loads when the browser is idle, never blocks rendering */}
         <Script

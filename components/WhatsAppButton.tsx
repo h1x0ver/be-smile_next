@@ -39,9 +39,11 @@ export default function WhatsAppButton() {
     `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3 pointer-events-none sm:bottom-6 sm:right-6">
+    <div data-contact="whatsapp" className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3 pointer-events-none sm:bottom-6 sm:right-6">
       {/* Menu */}
       <div
+        inert={!open}
+        aria-hidden={!open}
         className={`
  pointer-events-auto
  w-[calc(100vw-40px)] max-w-[335px] overflow-hidden rounded-[28px]

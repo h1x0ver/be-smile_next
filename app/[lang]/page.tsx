@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
+import styles from "./home.module.css";
 import { Suspense } from "react";
 import Hero from "@/components/Hero";
+import HomeSmoothScroll from "@/components/HomeSmoothScroll.client";
+import HomeMotion from "@/components/HomeMotion.client";
 import WhyUs from "@/components/WhyUs";
+import PatientReviews from "@/components/PatientReviews";
 import ServicesSection from "@/components/ServicesSection";
 import Doctors from "@/components/Doctors";
 import CasesPremium from "@/components/CasesPremium";
@@ -34,9 +38,9 @@ const HOME_SEO: Record<
 > = {
   ru: {
     title:
-      "Стоматология в Баку | BeSmile Dental Clinic — лечение зубов, имплантация и эстетика улыбки",
+      "Стоматология в Баку — BeSmile Dental Clinic",
     description:
-      "Стоматология в Баку BeSmile Dental Clinic: лечение зубов, имплантация, виниры, коронки, отбеливание, диагностика и эстетическая стоматология. Современная клиника с опытными врачами.",
+      "BeSmile — стоматология в Баку: лечение зубов, имплантация, виниры и отбеливание. Ул. Хана Шушинского, 24. Запишитесь на консультацию.",
     keywords: [
       "стоматология в Баку",
       "стоматология Баку",
@@ -59,9 +63,9 @@ const HOME_SEO: Record<
   },
   en: {
     title:
-      "Dentist in Baku | BeSmile Dental Clinic — Dental Treatment, Implants and Smile Aesthetics",
+      "Dentist in Baku — BeSmile Dental Clinic",
     description:
-      "BeSmile Dental Clinic in Baku offers dental treatment, implants, veneers, crowns, whitening, diagnostics and cosmetic dentistry with an experienced medical team.",
+      "Looking for a dentist in Baku? BeSmile Dental Clinic offers dental treatment, implants, veneers and whitening at 24 Khan Shushinski St. Book a consultation.",
     keywords: [
       "dentist in Baku",
       "dentistry in Baku",
@@ -82,9 +86,9 @@ const HOME_SEO: Record<
   },
   az: {
     title:
-      "Bakıda stomatologiya | BeSmile Dental Clinic — diş müalicəsi, implantasiya və estetik təbəssüm",
+      "Bakıda stomatologiya — BeSmile Dental Clinic",
     description:
-      "BeSmile Dental Clinic Bakıda stomatologiya xidmətləri təqdim edir: diş müalicəsi, implantasiya, vinirlər, qapaqlar, ağartma, diaqnostika və estetik stomatologiya.",
+      "Bakıda stomatologiya: BeSmile diş klinikası — diş müalicəsi, implantasiya, vinirlər və ağartma. Xan Şuşinski küçəsi, 24. Konsultasiyaya yazılın.",
     keywords: [
       "Bakıda stomatologiya",
       "Bakı stomatologiya",
@@ -515,31 +519,20 @@ export default async function HomePage(props: PageProps) {
         }}
       />
 
-      <div className="relative overflow-clip bg-[#f8f6f1]">
-        <div
-          className="pointer-events-none absolute inset-0 overflow-hidden"
-          aria-hidden="true"
-        >
-          <div className="absolute left-[-10%] top-[-8%] h-[420px] w-[420px] rounded-full bg-[radial-gradient(closest-side,rgba(217,199,162,0.188),transparent)] scale-[1.6]" />
-          {/* A fixed offset keeps this light stable while streamed sections arrive. */}
-          <div className="absolute right-[-8%] top-[1200px] h-[360px] w-[360px] rounded-full bg-[radial-gradient(closest-side,rgba(176,139,87,0.112),transparent)] scale-[1.6]" />
-          <div className="absolute bottom-[8%] left-[18%] h-[300px] w-[300px] rounded-full bg-[radial-gradient(closest-side,rgba(237,227,208,0.75),transparent)] scale-[1.6]" />
-
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.7),transparent_38%),linear-gradient(to_bottom,rgba(255,255,255,0.35),transparent_26%,rgba(255,255,255,0.4))]" />
-
-          <div className="absolute inset-0 opacity-[0.06] [background-image:linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] [background-size:90px_90px]" />
-        </div>
-
+      <HomeSmoothScroll />
+      <HomeMotion />
+      <div data-home-page className={`${styles.home} relative overflow-clip bg-[#f8f6f1]`}>
         <div className="relative z-10">
           <Hero lang={lang} />
           <Suspense fallback={<div aria-hidden="true" className="h-20" />}>
             <HomeMarquee lang={lang} />
           </Suspense>
           <Suspense fallback={<SectionSkeleton />}><WhyUs lang={lang} /></Suspense>
+          <PatientReviews lang={lang} />
           <Suspense fallback={<SectionSkeleton />}><Doctors lang={lang} /></Suspense>
           <Suspense fallback={<SectionSkeleton />}><HomeCases lang={lang} /></Suspense>
+          <Suspense fallback={<SectionSkeleton />}><ServicesSection lang={lang} /></Suspense>
           <Suspense fallback={<SectionSkeleton />}><HomeBlog lang={lang} /></Suspense>
-          <ServicesSection lang={lang} />
           <HomeFaq lang={lang} items={HOME_FAQ[lang]} />
         </div>
       </div>

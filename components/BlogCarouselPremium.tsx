@@ -6,7 +6,8 @@ import { formatBlogDate } from "@/lib/displayText";
 import Reveal from "./Reveal";
 import Link from "next/link";
 
-import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 import type { Lang } from "@/lib/directus";
 import { Button } from "@/components/ui/button"; // поправьте путь под ваш проект
 
@@ -120,7 +121,7 @@ function BlogCard({ post, lang, index }: { post: BlogPost; lang: Lang; index: nu
       dataCard
       delay={Math.min(index * 65, 195)}
 
-      className="group w-[300px] flex-none snap-start sm:w-[360px] lg:w-[400px] xl:w-[430px] transition-[translate,box-shadow,background-color,border-color,color] duration-400"
+      className="group w-[300px] flex-none min-w-0 sm:w-[360px] lg:w-[400px] xl:w-[430px] transition-[translate,box-shadow,background-color,border-color,color] duration-400"
     >
       <Link href={`/${lang}/blog/${post.slug}`} className="block h-full" draggable={false}>
         <div
@@ -177,62 +178,13 @@ function BlogCard({ post, lang, index }: { post: BlogPost; lang: Lang; index: nu
   );
 }
 
-/** Drag-to-scroll: слушаем move/up на window, а не на самом контейнере,
- *  иначе при быстром свайпе курсор выходит за границы блока, срабатывает
- *  onMouseLeave и драг обрывается на середине жеста. */
-function useDragScroll(scrollerRef: React.RefObject<HTMLDivElement | null>) {
-  const [isDragging, setIsDragging] = useState(false);
-  const stateRef = useRef({ startX: 0, startScroll: 0, moved: false });
-
-  const onMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      const el = scrollerRef.current;
-      if (!el) return;
-      e.preventDefault();
-      stateRef.current = { startX: e.clientX, startScroll: el.scrollLeft, moved: false };
-      setIsDragging(true);
-    },
-    [scrollerRef]
-  );
-
-  useEffect(() => {
-    if (!isDragging) return;
-
-    const onMove = (e: MouseEvent) => {
-      const el = scrollerRef.current;
-      if (!el) return;
-      const dx = e.clientX - stateRef.current.startX;
-      if (Math.abs(dx) > 3) stateRef.current.moved = true;
-      el.scrollLeft = stateRef.current.startScroll - dx;
-    };
-
-    const onUp = () => setIsDragging(false);
-
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseup", onUp);
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", onUp);
-    };
-  }, [isDragging, scrollerRef]);
-
-  const onClickCapture = useCallback((e: React.MouseEvent) => {
-    if (stateRef.current.moved) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  }, []);
-
-  return { isDragging, onMouseDown, onClickCapture };
-}
-
 export default function BlogCarouselPremium({ posts, lang, limit = 10 }: Props) {
   const copy = copyByLang[lang];
-  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const [viewportRef, api] = useEmblaCarousel({ align: "start", containScroll: "trimSnaps", duration: 32, skipSnaps: false });
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
 
-  const { isDragging, onMouseDown, onClickCapture } = useDragScroll(scrollerRef);
+
 
   const items = useMemo(() => {
     return posts
@@ -247,40 +199,27 @@ export default function BlogCarouselPremium({ posts, lang, limit = 10 }: Props) 
   }, [posts, limit]);
 
   const updateEdges = useCallback(() => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    setCanPrev(el.scrollLeft > 4);
-    setCanNext(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
-  }, []);
-
+    if (!api) return;
+    setCanPrev(api.canScrollPrev());
+    setCanNext(api.canScrollNext());
+  }, [api]);
   useEffect(() => {
-    updateEdges();
-    const el = scrollerRef.current;
-    if (!el) return;
-    el.addEventListener("scroll", updateEdges, { passive: true });
-    window.addEventListener("resize", updateEdges);
-    return () => {
-      el.removeEventListener("scroll", updateEdges);
-      window.removeEventListener("resize", updateEdges);
-    };
-  }, [updateEdges, items.length]);
-
+    if (!api) return;
+    const frame = requestAnimationFrame(updateEdges);
+    api.on("select", updateEdges).on("reInit", updateEdges);
+    return () => { cancelAnimationFrame(frame); api.off("select", updateEdges).off("reInit", updateEdges); };
+  }, [api, updateEdges]);
   const scrollByCards = (dir: 1 | -1) => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    const card = el.querySelector<HTMLElement>("[data-card]");
-    const gap = 24;
-    const step = card ? card.offsetWidth + gap : 380;
-    el.scrollBy({ left: dir * step, behavior: "smooth" });
+    if (dir > 0) api?.scrollNext(); else api?.scrollPrev();
   };
 
   if (items.length === 0) return null;
 
   return (
-    <section className="relative mx-auto max-w-[1600px] px-4 py-16 sm:px-6 lg:px-10 lg:py-24">
+    <section data-home="blog" className="relative mx-auto max-w-[1600px] px-4 py-16 sm:px-6 lg:px-10 lg:py-24">
       {/* ===== ХЕДЕР ===== */}
       <div className="mb-8 lg:mb-10">
-        <div className="relative overflow-hidden rounded-[30px] border border-white/60 bg-white/58 px-5 py-5 shadow-[0_20px_80px_rgba(0,0,0,0.07)] sm:rounded-[34px] sm:px-7 sm:py-7 lg:px-8 lg:py-8">
+        <div data-home="section-header" className="relative overflow-hidden rounded-[30px] border border-white/60 bg-white/58 px-5 py-5 shadow-[0_20px_80px_rgba(0,0,0,0.07)] sm:rounded-[34px] sm:px-7 sm:py-7 lg:px-8 lg:py-8">
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute left-[-8%] top-[-50%] h-[220px] w-[220px] rounded-full bg-[radial-gradient(closest-side,rgba(217,199,162,0.12),transparent)] scale-[1.6]" />
             <div className="absolute right-[-6%] top-[10%] h-[220px] w-[220px] rounded-full bg-[radial-gradient(closest-side,rgba(237,227,208,0.562),transparent)] scale-[1.6]" />
@@ -307,7 +246,7 @@ export default function BlogCarouselPremium({ posts, lang, limit = 10 }: Props) 
                 {copy.intro}
               </p>
 
-              <div className="mt-5 flex flex-wrap items-center gap-2.5 lg:justify-end">
+              <div data-home="header-notes" className="mt-5 flex flex-wrap items-center gap-2.5 lg:justify-end">
                 <div className="inline-flex items-center gap-2 rounded-full border border-black/8 bg-white/78 px-4 py-2.5 shadow-[0_10px_30px_rgba(0,0,0,0.03)]">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#b08b57]" />
                   <span className="text-[10px] uppercase tracking-[0.24em] text-black/50">
@@ -328,7 +267,7 @@ export default function BlogCarouselPremium({ posts, lang, limit = 10 }: Props) 
           <div className="relative z-10 mt-5 h-px w-full bg-[linear-gradient(to_right,rgba(17,17,17,0.14),rgba(17,17,17,0.04),transparent)]" />
 
           <div className="relative z-10 mt-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="max-w-[740px] text-[11px] uppercase tracking-[0.24em] text-black/42">
+            <p data-home="section-note" className="max-w-[740px] text-[11px] uppercase tracking-[0.24em] text-black/42">
               {copy.subtitle}
             </p>
 
@@ -355,21 +294,12 @@ export default function BlogCarouselPremium({ posts, lang, limit = 10 }: Props) 
         <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-10 bg-gradient-to-r from-[#f8f6f1] to-transparent sm:w-16" />
         <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-10 bg-gradient-to-l from-[#f8f6f1] to-transparent sm:w-16" />
 
-        <div
-          ref={scrollerRef}
-          onMouseDown={onMouseDown}
-          onClickCapture={onClickCapture}
-          className={[
-            "flex gap-6 overflow-x-auto scroll-smooth px-1 pb-3",
-            "select-none",
-            isDragging ? "cursor-grabbing snap-none" : "cursor-grab snap-x snap-mandatory",
-            "[scrollbar-width:none] [-ms-overflow-style:none]",
-            "[&::-webkit-scrollbar]:hidden",
-          ].join(" ")}
-        >
+        <div ref={viewportRef} className="overflow-hidden touch-pan-y pinch-zoom" data-home="blog-viewport">
+        <div data-home="blog-scroller" className="flex gap-6 px-1 pb-3 select-none cursor-grab active:cursor-grabbing will-change-transform">
           {items.map((post, i) => (
             <BlogCard key={post.id} post={post} lang={lang} index={i} />
           ))}
+        </div>
         </div>
       </div>
     </section>

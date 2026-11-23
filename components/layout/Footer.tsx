@@ -90,7 +90,7 @@ const T = {
   },
 
   cta: {
-    en: "Записаться",
+    en: "Book an appointment",
     ru: "Записаться",
     az: "Qəbula yazıl",
   },
@@ -122,9 +122,9 @@ const T = {
   },
 
   address: {
-    en: "Baku, Azerbaijan",
-    ru: "Баку, Азербайджан",
-    az: "Bakı, Azərbaycan",
+    en: "24 Khan Shushinski St., Baku",
+    ru: "Баку, ул. Хана Шушинского, 24",
+    az: "Bakı, Xan Şuşinski küçəsi, 24",
   },
   hours: {
     en: "Mon – Sat / 09:00 – 19:00",
@@ -196,7 +196,7 @@ const itemClass =
 export default function Footer({ lang }: { lang: Lang }) {
 
   return (
-    <footer className="relative overflow-hidden bg-[#f8f6f1] px-4 pb-6 pt-10 text-[#111111] font-sans sm:px-6 lg:px-10 lg:pt-14">
+    <footer data-home-footer className="relative overflow-hidden bg-[#f8f6f1] px-4 pb-6 pt-10 text-[#111111] font-sans sm:px-6 lg:px-10 lg:pt-14">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,#f8f6f1_0%,#f5f1ea_36%,#f7f4ee_100%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_14%,rgba(231,216,190,0.82),transparent_26%),radial-gradient(circle_at_86%_10%,rgba(198,166,113,0.24),transparent_24%),radial-gradient(circle_at_74%_78%,rgba(255,255,255,0.92),transparent_28%),radial-gradient(circle_at_18%_88%,rgba(224,210,183,0.42),transparent_30%)]" />
@@ -208,7 +208,7 @@ export default function Footer({ lang }: { lang: Lang }) {
         <div className="absolute inset-0 opacity-[0.24] [background:radial-gradient(circle_at_center,rgba(255,255,255,0.36)_0,rgba(255,255,255,0)_62%)]" />
       </div>
 
-      <div className="relative mx-auto max-w-[1520px]">
+      <div data-home-footer-container className="relative mx-auto max-w-[1520px]">
         <div className="relative overflow-hidden rounded-[34px] border border-white/12 bg-[#111111] px-6 py-7 shadow-[0_26px_90px_rgba(0,0,0,0.16)] sm:px-8 sm:py-8 lg:px-10 lg:py-9">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_84%_22%,rgba(201,174,123,0.24),transparent_19%),radial-gradient(circle_at_16%_78%,rgba(255,255,255,0.08),transparent_22%),linear-gradient(90deg,rgba(255,255,255,0.02),transparent_32%,rgba(196,162,110,0.06)_100%)]" />
           <div className="relative z-10 grid gap-7 lg:grid-cols-[1.08fr_0.92fr] lg:items-end">
@@ -248,7 +248,7 @@ export default function Footer({ lang }: { lang: Lang }) {
           </div>
         </div>
 
-        <div className="mt-5 grid gap-4 lg:grid-cols-[1.06fr_0.74fr_0.74fr_0.96fr]">
+        <div data-home-footer-grid className="mt-5 grid gap-4 lg:grid-cols-[1.06fr_0.74fr_0.74fr_0.96fr]">
           <div className={`${cardBase} p-6 sm:p-7`}>
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.72),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(217,199,162,0.1),transparent_30%)]" />
             <div className="relative z-10">

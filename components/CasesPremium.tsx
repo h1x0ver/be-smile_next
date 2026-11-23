@@ -314,7 +314,7 @@ export default function CasesPremium({
 
   return (
     <>
-      <section className="relative overflow-hidden bg-[#f8f6f1] px-4 pb-20 pt-12 sm:px-6 sm:pt-14 md:px-10 lg:px-16 lg:pb-28 lg:pt-16 xl:px-20">
+      <section data-home="cases" className="relative overflow-hidden bg-[#f8f6f1] px-4 pb-20 pt-12 sm:px-6 sm:pt-14 md:px-10 lg:px-16 lg:pb-28 lg:pt-16 xl:px-20">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute left-[-8%] top-[-6%] h-[360px] w-[360px] rounded-full bg-[radial-gradient(closest-side,rgba(237,227,208,0.75),transparent)] scale-[1.6]" />
           <div className="absolute right-[-10%] top-[2%] h-[360px] w-[360px] rounded-full bg-[radial-gradient(closest-side,rgba(217,199,162,0.3),transparent)] scale-[1.6]" />
@@ -325,7 +325,7 @@ export default function CasesPremium({
 
         <div className="relative mx-auto max-w-[1480px]">
           <div className="mb-8 lg:mb-10">
-            <div className="relative overflow-hidden rounded-[30px] border border-white/60 bg-white/58 px-5 py-5 shadow-[0_20px_80px_rgba(0,0,0,0.07)] sm:rounded-[34px] sm:px-7 sm:py-7 lg:px-8 lg:py-8">
+            <div data-home="section-header" className="relative overflow-hidden rounded-[30px] border border-white/60 bg-white/58 px-5 py-5 shadow-[0_20px_80px_rgba(0,0,0,0.07)] sm:rounded-[34px] sm:px-7 sm:py-7 lg:px-8 lg:py-8">
               <div className="pointer-events-none absolute inset-0">
                 <div className="absolute left-[-8%] top-[-50%] h-[220px] w-[220px] rounded-full bg-[radial-gradient(closest-side,rgba(217,199,162,0.12),transparent)] scale-[1.6]" />
                 <div className="absolute right-[-6%] top-[10%] h-[220px] w-[220px] rounded-full bg-[radial-gradient(closest-side,rgba(237,227,208,0.562),transparent)] scale-[1.6]" />
@@ -352,7 +352,7 @@ export default function CasesPremium({
                     {copy.intro}
                   </p>
 
-                  <div className="mt-5 flex flex-wrap items-center gap-2.5 lg:justify-end">
+                  <div data-home="header-notes" className="mt-5 flex flex-wrap items-center gap-2.5 lg:justify-end">
                     <div className="inline-flex items-center gap-2 rounded-full border border-black/8 bg-white/78 px-4 py-2.5 shadow-[0_10px_30px_rgba(0,0,0,0.03)]">
                       <span className="h-1.5 w-1.5 rounded-full bg-[#b08b57]" />
                       <span className="text-[10px] uppercase tracking-[0.24em] text-black/50">
@@ -373,7 +373,7 @@ export default function CasesPremium({
               <div className="relative z-10 mt-5 h-px w-full bg-[linear-gradient(to_right,rgba(17,17,17,0.14),rgba(17,17,17,0.04),transparent)]" />
 
               <div className="relative z-10 mt-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <p className="max-w-[740px] text-[11px] uppercase tracking-[0.24em] text-black/42">
+                <p data-home="section-note" className="max-w-[740px] text-[11px] uppercase tracking-[0.24em] text-black/42">
                   {copy.subtitle}
                 </p>
 
@@ -388,7 +388,7 @@ export default function CasesPremium({
             </div>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          <div data-home="cases-grid" className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {items.map((item, index) => (
               <Reveal as="article" delay={Math.min(index * 70, 140)}
                 key={item.id}
@@ -400,7 +400,7 @@ export default function CasesPremium({
                   <div className="absolute right-[-14%] top-[18%] h-[170px] w-[170px] rounded-full bg-[radial-gradient(closest-side,rgba(237,227,208,0.525),transparent)] scale-[1.6]" />
                 </div>
 
-                <div className="relative h-[320px] overflow-hidden sm:h-[360px] lg:h-[390px]">
+                <div data-home="case-photo" className="relative h-[320px] overflow-hidden sm:h-[360px] lg:h-[390px]">
                   <BeforeAfterSlider
                     sizes="(min-width: 1280px) 30vw, (min-width: 768px) 46vw, calc(100vw - 32px)"
                     before={item.before}
@@ -449,7 +449,7 @@ export default function CasesPremium({
                   </p>
 
                   <div className="mt-auto pt-6">
-                    <div className="flex items-center justify-between gap-4">
+                    <div data-home="case-actions" className="flex items-center justify-between gap-4">
                       <button
                         type="button"
                         onClick={() => setSelectedCase(item)}
@@ -531,7 +531,7 @@ export default function CasesPremium({
 
                 <div className="mt-6 flex flex-wrap items-center gap-3">
                   <Link
-                    href={`/${lang}/cases?case=${selectedCase.slug}`}
+                    href={`/${lang}/before-after?case=${selectedCase.slug}`}
                     className="inline-flex items-center rounded-full border border-[#1a1a1a]  px-5 py-3 text-[10px] uppercase tracking-[0.24em] text-white shadow-[0_18px_40px_rgba(0,0,0,0.14)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#3222]"
                   >
                     {copy.more}

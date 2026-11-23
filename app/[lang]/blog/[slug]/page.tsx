@@ -6,7 +6,16 @@ import BlogSlugPageClient from "./blog-slug-page.client";
 const SITE_URL = "https://besmile.az";
 const DIRECTUS_URL = (process.env.NEXT_PUBLIC_DIRECTUS_URL || "https://portal.besmile.az").replace(/\/$/, "");
 
-function pickTranslation(translations: any[] | undefined, lang: Lang) {
+type BlogTranslation = {
+  language?: string;
+  title?: string;
+  excerpt?: string;
+  content?: string;
+  seo_title?: string;
+  seo_description?: string;
+};
+
+function pickTranslation(translations: BlogTranslation[] | undefined, lang: Lang) {
   if (!Array.isArray(translations) || translations.length === 0) return null;
 
   return (
@@ -68,7 +77,7 @@ export async function generateMetadata({
     };
   }
 
-  const t = pickTranslation(post.translations as any, lang);
+  const t = pickTranslation(post.translations as BlogTranslation[], lang);
 
   if (!t) {
     return {
@@ -146,11 +155,11 @@ export default async function BlogSlugPage(
 ) {
   const { lang, slug } = await props.params;
 
-  const post = await getBlogPostBySlug(slug, lang);
+  const [post, articles] = await Promise.all([getBlogPostBySlug(slug, lang), getBlogPosts(lang)]);
 
   if (!post) return notFound();
 
-  const t = pickTranslation(post.translations as any, lang) as any;
+  const t = pickTranslation(post.translations as BlogTranslation[], lang);
 
   if (!t) return notFound();
 
@@ -169,5 +178,8 @@ export default async function BlogSlugPage(
     seo_description: t.seo_description ?? "",
   };
 
-  return <BlogSlugPageClient post={normalizedPost} lang={lang} />;
+  const relatedPosts = articles.filter(item => item.slug !== slug && item.is_active).slice(0, 3).map(item => ({
+    id: item.id, slug: item.slug, title: item.title, cover_image: item.cover_image, reading_time: item.reading_time,
+  }));
+  return <BlogSlugPageClient post={normalizedPost} lang={lang} relatedPosts={relatedPosts} />;
 }

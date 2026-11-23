@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { ArrowLeft, CalendarDays } from "lucide-react";
+import PageHeading from "@/components/PageHeading";
+import { ArrowLeft, ArrowUpRight, CalendarDays, Plus } from "lucide-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import {
@@ -10,6 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
+import styles from "./service-detail.module.css";
 
 type Lang = "en" | "ru" | "az";
 
@@ -41,6 +43,8 @@ function decodeHtmlEntities(input?: string) {
   if (!input) return "";
   return input
     .replace(/&nbsp;/g, " ")
+    .replace(/&mdash;/g, "—")
+    .replace(/&ndash;/g, "–")
     .replace(/&amp;/g, "&")
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
@@ -114,7 +118,10 @@ function getFallbackAssetUrl(id: string) {
 function getExcerpt(text: string, max = 220) {
   if (!text) return "";
   if (text.length <= max) return text;
-  return `${text.slice(0, max).trim()}…`;
+  const excerpt = text.slice(0, max);
+  const sentenceEnd = Math.max(excerpt.lastIndexOf("."), excerpt.lastIndexOf("!"), excerpt.lastIndexOf("?"));
+  if (sentenceEnd >= max * 0.45) return excerpt.slice(0, sentenceEnd + 1);
+  return `${excerpt.replace(/\s+\S*$/, "").trim()}…`;
 }
 
 export default function SinglePage({
@@ -136,7 +143,7 @@ export default function SinglePage({
   }, [data.translations]);
 
   const t =
-    translationsMap[lang] || translationsMap.en || data.translations?.[0];
+    translationsMap[lang];
 
   const title = decodeHtmlEntities(t?.title || "BeSmile Service");
   const summaryHtml = decodeHtmlEntities(t?.content || "");
@@ -153,8 +160,6 @@ export default function SinglePage({
   const thirdImage = heroImages[2];
   const fourthImage = heroImages[3];
 
-  // Короткий локализованный хелпер — только для нового блока консультации,
-  // остальной UI в этом файле хардкожен на английском и намеренно не тронут.
   const t3 = (ru: string, en: string, az: string) => {
     if (lang === "ru") return ru;
     if (lang === "az") return az;
@@ -169,7 +174,7 @@ export default function SinglePage({
   const bookHref = `/${lang}/book-online?message=${encodeURIComponent(consultMessage)}`;
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#f8f6f1] text-[#111111]">
+    <div data-service-page className={`${styles.page} relative min-h-screen bg-[#f8f6f1] text-[#111111]`}>
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute left-[-8%] top-[-5%] h-[320px] w-[320px] rounded-full bg-[radial-gradient(closest-side,rgba(233,220,196,0.45),transparent)] scale-[1.6]" />
         <div className="absolute right-[-6%] top-[10%] h-[260px] w-[260px] rounded-full bg-[radial-gradient(closest-side,rgba(215,189,146,0.18),transparent)] scale-[1.6]" />
@@ -179,35 +184,17 @@ export default function SinglePage({
       </div>
 
       <div className="relative z-[1]">
-        <section className="px-4 pb-8 pt-8 md:px-8 md:pb-12 md:pt-10 lg:px-12 lg:pb-16 lg:pt-12">
-          <div className="mx-auto max-w-[1680px]">
-            <div className="relative mx-auto max-w-[1320px] rounded-[40px] border border-white/60 bg-white/52 px-6 py-8 shadow-[0_18px_56px_rgba(0,0,0,0.05)] backdrop-blur-md md:px-10 md:py-12 lg:px-14 lg:py-16">
-              <div className="pointer-events-none absolute inset-x-[12%] top-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent" />
-              <div className="pointer-events-none absolute left-1/2 top-1/2 h-[180px] w-[180px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.413),transparent)] scale-[1.6]" />
-
-              <div className="relative text-center">
-                <div className="mb-7 inline-flex items-center gap-3 rounded-full border border-white/70 bg-white/74 px-4 py-2 shadow-[0_8px_22px_rgba(0,0,0,0.03)]">
-                  <span className="h-2 w-2 rounded-full bg-[#b08b57]" />
-                  <span className="text-[10px] uppercase tracking-[0.32em] text-black/55 md:text-[11px]">
-                    BeSmile Premium Care
-                  </span>
-                </div>
-
-                <h1 className="mx-auto max-w-[980px] text-balance text-center text-[42px] font-[300] uppercase leading-[0.93] tracking-[0.14em] text-[#111111] sm:text-[64px] lg:text-[96px]">
-                  {title}
-                </h1>
-              </div>
-            </div>
+        <section className={styles.hero}>
+          <nav className={styles.breadcrumb} aria-label={t3("Навигация", "Breadcrumb", "Naviqasiya")}><Link href={`/${lang}/services`}><ArrowLeft size={14} aria-hidden="true" />{t3("Все услуги", "All services", "Bütün xidmətlər")}</Link><span aria-hidden="true">/</span><span>{t3("Услуга", "Treatment", "Xidmət")}</span></nav>
+          <div className={styles.heroCard}>
+            <div className={styles.heroTitle}><span className={styles.eyebrow}>BeSmile Dental Clinic · Baku</span><PageHeading compact>{title}</PageHeading></div>
+            <div className={styles.heroIntro}>{summaryExcerpt && <p>{summaryExcerpt}</p>}<Link href={bookHref} className={styles.bookLink}><span>{t3("Записаться на консультацию", "Book a consultation", "Konsultasiyaya yazılın")}</span><ArrowUpRight size={18} aria-hidden="true" /></Link></div>
           </div>
         </section>
 
-        <section className="px-4 py-4 md:px-8 md:py-6 lg:px-12 lg:py-8">
+        <section data-service="gallery" className="px-4 py-4 md:px-8 md:py-6 lg:px-12 lg:py-8">
           <div className="mx-auto max-w-[1680px]">
             <div className="rounded-[40px] border border-white/60 bg-white/50 p-4 shadow-[0_18px_56px_rgba(0,0,0,0.05)] backdrop-blur-md md:p-5 lg:p-6">
-              <div className="mb-6 flex items-end justify-between gap-4">
-                <div />
-              </div>
-
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.06fr_0.94fr]">
                 <div className="grid grid-cols-1 gap-4">
                   {leadImage && (
@@ -255,9 +242,9 @@ export default function SinglePage({
                     />
                   )}
 
-                  <div className="overflow-hidden rounded-[32px] border border-[#1d1d1d] bg-[#111111] px-6 py-6 shadow-[0_18px_52px_rgba(0,0,0,0.14)] md:px-7 md:py-7">
+                  <div data-service="overview" className="overflow-hidden rounded-[32px] border border-[#1d1d1d] bg-[#111111] px-6 py-6 shadow-[0_18px_52px_rgba(0,0,0,0.14)] md:px-7 md:py-7">
                     <div className="mb-4 text-[10px] uppercase tracking-[0.32em] text-white/40 md:text-[11px]">
-                      Service Overview
+                      {t3("Об услуге", "Treatment overview", "Xidmət haqqında")}
                     </div>
 
                     <div
@@ -283,13 +270,13 @@ export default function SinglePage({
         </section>
 
         {accordionItems.length > 0 && (
-          <section className="px-4 pb-16 pt-10 md:px-8 md:pb-24 md:pt-14 lg:px-12  lg:pt-18 [content-visibility:auto] [contain-intrinsic-size:1px_1200px]">
+          <section data-service="details" className="px-4 pb-16 pt-10 md:px-8 md:pb-24 md:pt-14 lg:px-12  lg:pt-18 [content-visibility:auto] [contain-intrinsic-size:1px_1200px]">
             <div className="mx-auto max-w-[1680px]">
               <div className="mb-8 md:mb-10 lg:mb-12">
                 <div className="inline-flex items-center gap-3 rounded-full border border-white/70 bg-white/72 px-4 py-2 shadow-[0_8px_24px_rgba(0,0,0,0.04)] backdrop-blur-md">
                   <span className="h-2 w-2 rounded-full bg-[#b08b57]" />
                   <span className="text-[10px] uppercase tracking-[0.32em] text-black/50 md:text-[11px]">
-                    Premium Details
+                    {t3("Подробнее об услуге", "Treatment details", "Xidmət haqqında ətraflı")}
                   </span>
                 </div>
               </div>
@@ -306,7 +293,7 @@ export default function SinglePage({
                     collapsible
                     value={activeItem}
                     onValueChange={setActiveItem}
-                    className="space-y-4 md:space-y-5"
+                    className={styles.accordion}
                   >
                     {accordionItems.map((item, index) => {
                       const value = `acc-${index}`;
@@ -334,61 +321,27 @@ export default function SinglePage({
                           key={value}
                           value={value}
                           className={cn(
+                            styles.accordionItem,
                             "group overflow-hidden rounded-[32px] border transition-all duration-500",
                             isOpen
                               ? "border-[#d9c09a]/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(247,241,232,0.96))] shadow-[0_26px_64px_rgba(0,0,0,0.06)]"
                               : "border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(255,255,255,0.68))] shadow-[0_10px_22px_rgba(0,0,0,0.03)] hover:shadow-[0_18px_40px_rgba(0,0,0,0.05)]"
                           )}
                         >
-                          <AccordionTrigger className="w-full px-6 py-6 text-left no-underline hover:no-underline md:px-8 md:py-7 lg:px-10 lg:py-8 [&>svg]:hidden">
-                            <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_140px] lg:items-start">
-                              <div className="min-w-0">
-                                <div className="mb-4 flex items-center gap-3">
-                                  <span className="inline-flex h-[7px] w-[7px] rounded-full bg-[#b08b57]" />
-                                  <span className="text-[10px] uppercase tracking-[0.34em] text-black/42 md:text-[11px]">
-                                    Besmile Signature Detail
-                                  </span>
-                                </div>
-
-                                <h3
-                                  className={cn(
-                                    "max-w-[980px] text-balance font-[300] leading-[1.04] tracking-[-0.035em] text-[#111111] transition-all duration-300",
-                                    isOpen
-                                      ? "text-[28px] md:text-[40px] lg:text-[52px]"
-                                      : "text-[24px] md:text-[34px] lg:text-[44px]"
-                                  )}
-                                >
-                                  {accTitle}
-                                </h3>
-                              </div>
-
-                              <div className="flex items-center justify-start lg:justify-end">
-                                <div
-                                  className={cn(
-                                    "inline-flex items-center gap-3 rounded-full border px-4 py-2.5 text-[11px] uppercase tracking-[0.24em] transition-all duration-500",
-                                    isOpen
-                                      ? "border-[#c8ab77]/60 bg-[#111111] text-white shadow-[0_14px_30px_rgba(17,17,17,0.14)]"
-                                      : "border-[#dac7a4]/55 bg-white/72 text-black/55"
-                                  )}
-                                >
-                                  <span
-                                    className={cn(
-                                      "block h-[1px] w-5 bg-current transition-all duration-500",
-                                      isOpen ? "rotate-0" : ""
-                                    )}
-                                  />
-                                  <span>{isOpen ? "Opened" : "Open"}</span>
-                                </div>
-                              </div>
-                            </div>
+                          <AccordionTrigger className={styles.trigger}>
+                            <span className={styles.number} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                            <span className={styles.accTitle}>{accTitle}</span>
+                            <span className={styles.actionText}>{isOpen ? t3("Свернуть", "Close", "Bağla") : t3("Подробнее", "Read more", "Ətraflı")}</span>
+                            <span className={styles.toggle} aria-hidden="true"><Plus size={20} strokeWidth={1.4} /></span>
                           </AccordionTrigger>
 
-                          <AccordionContent className="overflow-hidden px-6 pb-6 pt-0 md:px-8 md:pb-8 lg:px-10 lg:pb-10">
-                            <div className="border-t border-black/7 pt-6 md:pt-8">
-                              <div className="relative overflow-hidden rounded-[28px] border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(255,255,255,0.72))] p-6 shadow-[0_12px_30px_rgba(0,0,0,0.03)] backdrop-blur-md md:p-7 lg:p-8">
+                          <AccordionContent className={styles.accordionContent}>
+                            <div className={styles.contentBorder}>
+                              <div data-service="rich-panel" className="relative overflow-hidden rounded-[28px] border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(255,255,255,0.72))] p-6 shadow-[0_12px_30px_rgba(0,0,0,0.03)] backdrop-blur-md md:p-7 lg:p-8">
                                 <div className="pointer-events-none absolute left-0 top-0 h-full w-[2px] bg-gradient-to-b from-[#d8bc8c] via-[#b08b57] to-transparent" />
                                 <div
                                   className={cn(
+                                    styles.richText,
                                     "[&_h1]:text-[28px] [&_h1]:font-[300] [&_h1]:leading-[1.08] [&_h1]:text-[#111111]",
                                     "[&_h2]:text-[24px] [&_h2]:font-[300] [&_h2]:leading-[1.12] [&_h2]:text-[#111111]",
                                     "[&_h3]:text-[20px] [&_h3]:font-medium [&_h3]:text-[#111111]",
@@ -471,7 +424,7 @@ export default function SinglePage({
 
         <div className="mb-6 flex justify-center">
           <Link
-            href="/services"
+            href={`/${lang}/services`}
             className="group inline-flex items-center gap-3 rounded-full border border-[#d9c7a2]/60 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(245,238,228,0.92))] px-5 py-2.5 text-[11px] uppercase tracking-[0.28em] text-[#111111] shadow-[0_8px_24px_rgba(0,0,0,0.04)] transition-all duration-500 hover:shadow-[0_14px_36px_rgba(0,0,0,0.06)]"
           >
             <span className="flex h-[28px] w-[28px] items-center justify-center rounded-full border border-black/10 bg-white/80 transition-all duration-500 group-hover:-translate-x-0.5">
@@ -479,7 +432,7 @@ export default function SinglePage({
             </span>
 
             <span className="relative">
-              Back to Services
+              {t3("Все услуги", "Back to services", "Bütün xidmətlər")}
               <span className="absolute left-0 bottom-0 h-[1px] w-0 bg-[#111111] transition-all duration-500 group-hover:w-full" />
             </span>
           </Link>

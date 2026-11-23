@@ -1,0 +1,85 @@
+{
+  "ru": {
+    "title": "Стоматология в Баку | BeSmile Dental Clinic — лечение зубов, имплантация и эстетика улыбки",
+    "htmlLang": "ru",
+    "h1Count": 1,
+    "canonical": "https://besmile.az/ru",
+    "alternates": [
+      [
+        "az",
+        "https://besmile.az/az"
+      ],
+      [
+        "ru",
+        "https://besmile.az/ru"
+      ],
+      [
+        "en",
+        "https://besmile.az/en"
+      ],
+      [
+        "x-default",
+        "https://besmile.az/az"
+      ]
+    ],
+    "emptyDoctors": false
+  },
+  "az": {
+    "title": "Bakıda stomatologiya | BeSmile Dental Clinic — diş müalicəsi, implantasiya və estetik təbəssüm",
+    "htmlLang": "az",
+    "h1Count": 1,
+    "canonical": "https://besmile.az/az",
+    "alternates": [
+      [
+        "az",
+        "https://besmile.az/az"
+      ],
+      [
+        "ru",
+        "https://besmile.az/ru"
+      ],
+      [
+        "en",
+        "https://besmile.az/en"
+      ],
+      [
+        "x-default",
+        "https://besmile.az/az"
+      ]
+    ],
+    "emptyDoctors": false
+  },
+  "en": {
+    "title": "Dentist in Baku | BeSmile Dental Clinic — Dental Treatment, Implants and Smile Aesthetics",
+    "htmlLang": "en",
+    "h1Count": 1,
+    "canonical": "https://besmile.az/en",
+    "alternates": [
+      [
+        "az",
+        "https://besmile.az/az"
+      ],
+      [
+        "ru",
+        "https://besmile.az/ru"
+      ],
+      [
+        "en",
+        "https://besmile.az/en"
+      ],
+      [
+        "x-default",
+        "https://besmile.az/az"
+      ]
+    ],
+    "emptyDoctors": false
+  },
+  "sitemap": {
+    "urls": 201,
+    "case404Candidates": 33,
+    "lastmodExamples": [
+      "2026-11-18T14:25:52.077Z",
+      "2026-11-18T14:25:52.077Z"
+    ]
+  }
+}

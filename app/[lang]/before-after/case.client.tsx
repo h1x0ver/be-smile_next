@@ -134,7 +134,7 @@ const UI: Record<
     stats: [
       { k: "5000+", label: "Happy patients" },
       { k: "10+", label: "Years experience" },
-      { k: "4.9", label: "Average rating" },
+      { k: "5/5", label: "Average rating" },
       { k: "100%", label: "Sterile protocol" },
     ],
 
@@ -200,7 +200,7 @@ const UI: Record<
     stats: [
       { k: "5000+", label: "Довольных пациентов" },
       { k: "10+", label: "Лет опыта" },
-      { k: "4.9", label: "Средняя оценка" },
+      { k: "5/5", label: "Средняя оценка" },
       { k: "100%", label: "Стерильный протокол" },
     ],
     highlights: [
@@ -264,7 +264,7 @@ const UI: Record<
     stats: [
       { k: "5000+", label: "Məmnun pasiyent" },
       { k: "10+", label: "İl təcrübə" },
-      { k: "4.9", label: "Orta reytinq" },
+      { k: "5/5", label: "Orta reytinq" },
       { k: "100%", label: "Steril protokol" },
     ],
     highlights: [

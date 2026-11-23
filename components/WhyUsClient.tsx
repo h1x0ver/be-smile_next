@@ -188,7 +188,7 @@ export default function WhyUsClient({ lang, items = [] }: Props) {
   const [featured, ...rest] = localized;
 
   return (
-    <section className="relative overflow-hidden">
+    <section data-home="why" className="relative overflow-hidden">
       {/* Ambient background light — gradients only, no filter:blur() */}
       <div
         aria-hidden="true"
@@ -199,12 +199,12 @@ export default function WhyUsClient({ lang, items = [] }: Props) {
         }}
       />
 
-      <div className="relative z-10 px-4 pb-16 pt-16 sm:px-6 md:px-10 lg:px-16 xl:px-20 lg:pb-28 lg:pt-24">
+      <div data-home="section-container" className="relative z-10 px-4 pb-16 pt-16 sm:px-6 md:px-10 lg:px-16 xl:px-20 lg:pb-28 lg:pt-24">
         <div className="mx-auto max-w-[1480px]">
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-8">
+          <div data-home="why-grid" className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-8">
             <Reveal
 
-              className="lg:col-span-5"
+              className="home-why-intro lg:col-span-5"
             >
               <div className="relative h-full overflow-hidden rounded-[28px] border border-white/60 bg-white/72 p-5 shadow-[0_18px_52px_rgba(0,0,0,0.055)] supports-[backdrop-filter:blur(0px)]:bg-white/60 sm:rounded-[34px] sm:p-7 lg:min-h-[620px] lg:p-10">
                 <Glow backgroundImage="radial-gradient(160px circle at -5% 0%, rgba(217,199,162,0.22), transparent 70%), radial-gradient(160px circle at 100% 100%, rgba(237,227,208,0.75), transparent 70%), linear-gradient(145deg, rgba(255,255,255,0.64), rgba(255,255,255,0.18))" />
@@ -218,14 +218,14 @@ export default function WhyUsClient({ lang, items = [] }: Props) {
                   </div>
 
                   <div className="mb-6 sm:mb-8">
-                    <div className="leading-[0.92] text-[#111111]">
-                      <div className="text-[34px] font-[300] uppercase tracking-[0.14em] sm:text-[58px] lg:text-[72px] text-balance">
+                    <h2 className="leading-[0.92] text-[#111111]">
+                      <span className="block text-[34px] font-[300] uppercase tracking-[0.14em] sm:text-[58px] lg:text-[72px] text-balance">
                         {content.title1}
-                      </div>
-                      <div className="mt-2 max-w-[12ch] text-[28px] font-[300] uppercase tracking-[0.08em] sm:max-w-none sm:text-[46px] lg:text-[58px] text-balance">
+                      </span>
+                      <span className="block mt-2 max-w-[12ch] text-[28px] font-[300] uppercase tracking-[0.08em] sm:max-w-none sm:text-[46px] lg:text-[58px] text-balance">
                         {content.title2}
-                      </div>
-                    </div>
+                      </span>
+                    </h2>
 
                     <p className="mt-6 hidden max-w-[520px] text-[15px] leading-7 text-black/70 sm:block sm:text-[16px]">
                       {content.intro}
@@ -252,7 +252,7 @@ export default function WhyUsClient({ lang, items = [] }: Props) {
                     ))}
                   </div>
 
-                  <div className="hidden sm:block">
+                  <div data-home="why-details" className="hidden sm:block">
                     <div className="mb-8 h-px w-full bg-[linear-gradient(to_right,rgba(17,17,17,0.18),rgba(17,17,17,0.05),transparent)]" />
 
                     <div className="space-y-5">
@@ -299,12 +299,12 @@ export default function WhyUsClient({ lang, items = [] }: Props) {
               </div>
             </Reveal>
 
-            <div className="lg:col-span-7">
+            <div data-home="why-reasons" className="lg:col-span-7">
               <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
                 {featured ? (
                   <Reveal as="article"
 
-                    className="group relative overflow-hidden rounded-[28px] border border-white/60 bg-[#111111] p-5 text-white shadow-[0_22px_64px_rgba(0,0,0,0.15)] md:col-span-2 sm:rounded-[34px] sm:p-8 lg:min-h-[320px] transition-[translate,box-shadow,background-color,border-color,color] duration-400"
+                    className="home-reason group relative overflow-hidden rounded-[28px] border border-white/60 bg-[#111111] p-5 text-white shadow-[0_22px_64px_rgba(0,0,0,0.15)] md:col-span-2 sm:rounded-[34px] sm:p-8 lg:min-h-[320px] transition-[translate,box-shadow,background-color,border-color,color] duration-400"
                   >
                     <Glow backgroundImage="radial-gradient(170px circle at 0% 0%, rgba(215,189,146,0.22), transparent 70%), radial-gradient(200px circle at 100% 0%, rgba(255,255,255,0.12), transparent 70%), linear-gradient(135deg, rgba(255,255,255,0.06), transparent 42%)" />
 
@@ -343,7 +343,7 @@ export default function WhyUsClient({ lang, items = [] }: Props) {
                     <Reveal as="article"
                       key={item.id}
 
-                      className={`group relative overflow-hidden rounded-[24px] border border-white/60 bg-white/76 p-4 shadow-[0_16px_44px_rgba(0,0,0,0.06)] supports-[backdrop-filter:blur(0px)]:bg-white/68 sm:rounded-[30px] sm:p-7 transition-all duration-400 ${
+                      className={`home-reason group relative overflow-hidden rounded-[24px] border border-white/60 bg-white/76 p-4 shadow-[0_16px_44px_rgba(0,0,0,0.06)] supports-[backdrop-filter:blur(0px)]:bg-white/68 sm:rounded-[30px] sm:p-7 transition-all duration-400 ${
                         isWide ? "md:col-span-2" : ""
                       }`}
                     >
@@ -366,7 +366,7 @@ export default function WhyUsClient({ lang, items = [] }: Props) {
                         </h3>
 
                         <div className="mt-4 sm:mt-5">
-                          <ExpandableDescription description={item.description} wide={isWide} moreLabel={content.moreLabel} hideLabel={content.hideLabel} />
+                          <ExpandableDescription id={`why-${safeLang}-${item.id}`} description={item.description} wide={isWide} moreLabel={content.moreLabel} hideLabel={content.hideLabel} />
                         </div>
                       </div>
                     </Reveal>

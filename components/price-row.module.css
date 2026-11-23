@@ -1,0 +1,40 @@
+.item { scroll-margin-top: 190px; width: 100%; border-bottom: 1px solid #e9e5dc; transition: background .2s; }
+.last { border-bottom: none; }
+.item:hover { background: #faf8f3; }
+.item[data-open] { background: #faf7ef; }
+.row { display: grid; grid-template-columns: 22px minmax(0, 1fr) minmax(80px, 180px) auto; align-items: center; gap: 22px; padding: 23px 26px; }
+.index { font-size: 11px; color: #9a9387; font-variant-numeric: tabular-nums; align-self: start; margin-top: 7px; }
+.title { min-width: 0; }
+.title h3 { font-size: 16px; font-weight: 450; letter-spacing: -.02em; line-height: 1.5; color: #282923; overflow-wrap: anywhere; }
+.titleButton { display: flex; align-items: center; justify-content: space-between; gap: 14px; text-align: left; cursor: pointer; width: 100%; min-height: 44px; }
+.chevron { flex-shrink: 0; transition: transform .2s; }
+.item[data-open] .chevron { transform: rotate(180deg); }
+.value { font-size: 21px; font-weight: 500; line-height: 1.35; letter-spacing: -.025em; color: #3b392e; font-variant-numeric: tabular-nums; text-align: right; overflow-wrap: anywhere; }
+.book { display: inline-flex; align-items: center; justify-content: center; gap: 14px; min-height: 44px; padding: 0 16px; border: 1px solid #111111; border-radius: 30px; background: #111111; color: #ffffff; transition: background .2s, border-color .2s; }
+.book span { font-size: 11px; font-weight: 600; }
+.book:hover { background: #000000; border-color: #000000; }
+.book:focus-visible, .titleButton:focus-visible { outline: 2px solid #927040; outline-offset: 4px; border-radius: 6px; }
+.description { padding: 0 26px 26px 70px; }
+.description > div { max-width: 720px; font-size: 14px; line-height: 1.85; color: #666157; overflow-wrap: anywhere; }
+.description p, .description ul, .description ol { margin-bottom: 12px; }
+.description p:last-child { margin-bottom: 0; }
+.description ul { list-style: disc; padding-left: 20px; }
+.description ol { list-style: decimal; padding-left: 20px; }
+.description a { text-decoration: underline; text-underline-offset: 3px; }
+.description img, .description table { max-width: 100%; }
+@media (max-width: 1250px) and (min-width: 700px) { .book { padding: 0; width: 44px; } .book span { display: none; } .row { gap: 16px; } }
+@media (max-width: 699px) {
+  .row { grid-template-columns: minmax(0, 1fr) auto; gap: 12px 16px; padding: 20px; }
+  .index { display: none; }
+  .title { grid-column: 1 / -1; }
+  .title h3 { font-size: 16px; }
+  .titleButton { min-height: 0; }
+  .value { text-align: left; font-size: 23px; }
+  .book { min-height: 42px; padding: 0 14px; }
+  .description { padding: 0 20px 22px; }
+  .description > div { font-size: 14px; }
+}
+@media (max-width: 359px) { .row { padding: 18px 16px; } .book { width: 44px; padding: 0; } .book span { display: none; } .title h3 { font-size: 15px; } }
+@media (prefers-reduced-motion: reduce) { .item, .book, .chevron { transition: none; } }
+
+.book span, .book svg { color: #ffffff; }

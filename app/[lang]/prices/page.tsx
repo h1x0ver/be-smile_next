@@ -12,6 +12,7 @@ type PriceCategory = {
   id: number;
   slug: string;
   translations?: { language: Lang; name: string }[];
+  price_categories_translations?: { lang: Lang; name: string }[];
 };
 
 type PriceItem = {
@@ -41,7 +42,7 @@ const PAGE_SEO: Record<
 > = {
   ru: {
     title:
-      "Цены BeSmile в Баку | Стоимость стоматологии, имплантов, виниров и лечения зубов",
+      "Стоматология в Баку: цены на лечение — BeSmile",
     description:
       "Актуальные цены BeSmile Dental Clinic в Баку: стоматологические услуги, имплантация, лечение зубов, хирургия, ортопедия, гигиена и эстетическая стоматология.",
     keywords: [
@@ -238,9 +239,18 @@ export default async function Page(
   ]);
 
   const prices = Array.isArray(pricesRaw) ? (pricesRaw as PriceItem[]) : [];
-  const categories = Array.isArray(categoriesRaw)
-    ? (categoriesRaw as PriceCategory[])
-    : [];
+  const categoryLabels: Record<string, Record<Lang, string>> = {
+    surgery: { ru: "Хирургия", en: "Surgery", az: "Cərrahiyyə" },
+    therapy: { ru: "Лечение зубов", en: "Therapy", az: "Diş müalicəsi" },
+    orthopedics: { ru: "Ортопедия", en: "Orthopedics", az: "Ortopediya" },
+    implantology: { ru: "Имплантация", en: "Implantology", az: "İmplantasiya" },
+    "oral hygiene": { ru: "Гигиена полости рта", en: "Oral hygiene", az: "Ağız gigiyenası" },
+  };
+  const categories = (Array.isArray(categoriesRaw) ? categoriesRaw as PriceCategory[] : []).map(category => {
+    const translations = category.translations ?? category.price_categories_translations?.map(tr => ({ language: tr.lang, name: tr.name })) ?? [];
+    const localizedName = translations.find(tr => tr.language === lang)?.name;
+    return { ...category, translations: localizedName ? translations : [...translations, { language: lang, name: categoryLabels[category.slug.toLowerCase()]?.[lang] ?? category.slug }] };
+  });
 
   const seo = PAGE_SEO[lang];
   const pageUrl = `${SITE_URL}${getLocalizedPath(lang)}`;
@@ -414,8 +424,8 @@ export default async function Page(
       <PricesClient
         key={lang}
         lang={lang}
-        prices={prices as any}
-        categories={categories as any}
+        prices={prices}
+        categories={categories}
       />
     </>
   );

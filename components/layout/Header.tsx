@@ -71,7 +71,6 @@ const T: Record<
       { href: "doctors", label: "Врачи", note: "Команда специалистов BeSmile" },
       { href: "before-after", label: "До и после", note: "Реальные результаты лечения" },
       { href: "reviews", label: "Отзывы", note: "Что говорят наши пациенты" },
-      { href: "activity", label: "Жизнь клиники", note: "Новости, видео и события" },
     ],
   },
   en: {
@@ -100,7 +99,6 @@ const T: Record<
       { href: "doctors", label: "Doctors", note: "The BeSmile specialist team" },
       { href: "before-after", label: "Before & after", note: "Real treatment results" },
       { href: "reviews", label: "Reviews", note: "What our patients say" },
-      { href: "activity", label: "Clinic life", note: "News, videos and events" },
     ],
   },
   az: {
@@ -129,7 +127,6 @@ const T: Record<
       { href: "doctors", label: "Həkimlər", note: "BeSmile mütəxəssis komandası" },
       { href: "before-after", label: "Əvvəl və sonra", note: "Real müalicə nəticələri" },
       { href: "reviews", label: "Rəylər", note: "Pasiyentlərimiz nə deyir" },
-      { href: "activity", label: "Klinikanın həyatı", note: "Xəbərlər, videolar, tədbirlər" },
     ],
   },
 };
@@ -209,6 +206,7 @@ export default function Header({
   const previewService = allServices.find((s) => s.slug === preview) ?? allServices[0];
 
   const closeTimer = useRef<number | undefined>(undefined);
+  const navigationHoverLock = useRef(false);
 
   const href = (path: string) => (path ? `/${lang}/${path}` : `/${lang}`);
   const isActive = (path: string) =>
@@ -220,6 +218,7 @@ export default function Header({
   };
 
   const showMenu = useCallback((key: Exclude<MenuKey, null>) => {
+    if (navigationHoverLock.current) return;
     window.clearTimeout(closeTimer.current);
     setMenuEverOpened(true);
     setOpenMenu(key);
@@ -252,6 +251,24 @@ export default function Header({
     setSearchOpen(true);
   }, []);
 
+  // Close on link activation as well as route changes: clicking the current
+  // URL or changing only query/hash does not necessarily change pathname.
+  const closeForNavigation = useCallback(() => {
+    window.clearTimeout(closeTimer.current);
+    window.clearTimeout(mobileTimer.current);
+    navigationHoverLock.current = true;
+    setOpenMenu(null);
+    setMobileOpen(false);
+    setMobileMounted(false);
+    setMobileSection(null);
+    setSearchOpen(false);
+  }, []);
+
+  useEffect(() => () => {
+    window.clearTimeout(closeTimer.current);
+    window.clearTimeout(mobileTimer.current);
+  }, []);
+
   // Close everything on navigation (state reset during render, React's recommended pattern)
   const [lastPath, setLastPath] = useState(pathname);
   if (lastPath !== pathname) {
@@ -276,28 +293,31 @@ export default function Header({
     return () => window.clearInterval(id);
   }, []);
 
-  // Compact on scroll; hide while scrolling down, reveal on scroll up
+  // Accumulate deliberate movement instead of toggling on trackpad jitter.
   useEffect(() => {
-    let lastY = window.scrollY;
-    let ticking = false;
-
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(() => {
-        const y = window.scrollY;
-        setScrolled(y > 24);
-        if (Math.abs(y - lastY) > 6) {
-          setHidden(y > lastY && y > 320);
-          lastY = y;
-        }
-        ticking = false;
-      });
+    let lastY = Math.max(0, window.scrollY);
+    let travel = 0;
+    let direction = 0;
+    let frame = 0;
+    let compact = false;
+    let concealed = false;
+    const update = () => {
+      frame = 0;
+      const y = Math.max(0, window.scrollY);
+      const delta = y - lastY;
+      lastY = y;
+      const nextCompact = compact ? y > 8 : y > 32;
+      if (nextCompact !== compact) { compact = nextCompact; setScrolled(compact); }
+      if (Math.abs(delta) < 1) return;
+      const nextDirection = Math.sign(delta);
+      if (nextDirection !== direction) { travel = 0; direction = nextDirection; }
+      travel += Math.abs(delta);
+      const nextHidden = y < 160 ? false : direction > 0 && y > 320 && travel > 64 ? true : direction < 0 && travel > 24 ? false : concealed;
+      if (nextHidden !== concealed) { concealed = nextHidden; setHidden(concealed); }
     };
-
-    onScroll();
+    const onScroll = () => { if (!frame) frame = window.requestAnimationFrame(update); };
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => { window.removeEventListener("scroll", onScroll); window.cancelAnimationFrame(frame); };
   }, []);
 
   useEffect(() => {
@@ -344,6 +364,8 @@ export default function Header({
       />
 
       <header
+        onPointerMove={() => { navigationHoverLock.current = false; }}
+
         data-scrolled={scrolled}
         data-hidden={headerHidden}
         data-menu={mobileOpen ? "open" : undefined}
@@ -393,7 +415,7 @@ export default function Header({
         <div className="bs-header-bar relative" onPointerLeave={scheduleClose}>
           <div className="relative mx-auto flex h-[72px] max-w-[1520px] items-center justify-between gap-6 px-4 sm:px-6 xl:h-[84px] xl:px-8">
             {/* Logo */}
-            <Link href={href("")} prefetch={false} className="group relative flex shrink-0 items-center" aria-label="BeSmile Dental Clinic">
+            <Link onClick={closeForNavigation} href={href("")} prefetch={false} className="group relative flex shrink-0 items-center" aria-label="BeSmile Dental Clinic">
               <img
                 src="/logo2.svg"
                 width="146"
@@ -419,7 +441,7 @@ export default function Header({
                         aria-expanded={openMenu === key}
                         aria-controls={`bs-menu-${key}`}
                         onPointerEnter={(e) => e.pointerType === "mouse" && showMenu(key)}
-                        onClick={() => (openMenu === key ? setOpenMenu(null) : showMenu(key))}
+                        onClick={() => { navigationHoverLock.current = false; if (openMenu === key) setOpenMenu(null); else showMenu(key); }}
                         className="bs-nav-link group relative flex h-full items-center gap-1.5 px-4 text-[13px] font-medium tracking-[0.02em]"
                         data-active={active || openMenu === key}
                       >
@@ -433,7 +455,7 @@ export default function Header({
                 })}
                 {topLinks.map((item) => (
                   <li key={item.key} className="h-full" onPointerEnter={scheduleClose}>
-                    <Link
+                    <Link onClick={closeForNavigation}
                       href={href(item.key)}
                       className="bs-nav-link relative flex h-full items-center px-4 text-[13px] font-medium tracking-[0.02em]"
                       data-active={isActive(item.key)}
@@ -458,7 +480,7 @@ export default function Header({
 
               <div className="hidden items-center rounded-full border border-black/[0.08] bg-white/70 p-1 xl:flex">
                 {LANGS.map((l) => (
-                  <Link
+                  <Link onClick={closeForNavigation}
                     key={l}
                     href={buildLangUrl(l)} prefetch={false}
                     hrefLang={l}
@@ -472,7 +494,7 @@ export default function Header({
                 ))}
               </div>
 
-              <Link
+              <Link onClick={closeForNavigation}
                 href={href("book-online")} prefetch={false}
                 className="bs-cta group relative hidden h-11 items-center gap-2 overflow-hidden rounded-full bg-[#111111] pl-5 pr-4 sm:inline-flex"
               >
@@ -518,7 +540,7 @@ export default function Header({
                       <ul className="space-y-0.5">
                         {group.items.map((item) => (
                           <li key={item.slug}>
-                            <Link
+                            <Link onClick={closeForNavigation}
                               href={href(`services/${item.slug}`)}
                               onPointerEnter={() => setPreview(item.slug)}
                               onFocus={() => setPreview(item.slug)}
@@ -537,7 +559,7 @@ export default function Header({
 
                   <div className="col-span-3 flex items-center justify-between border-t border-black/[0.06] pt-6">
                     <p className="text-[13px] text-black/50">{t.servicesIntro}</p>
-                    <Link
+                    <Link onClick={closeForNavigation}
                       href={href("services")}
                       className="group/all inline-flex items-center gap-2 text-[13px] font-semibold text-[#111111]"
                     >
@@ -550,7 +572,7 @@ export default function Header({
                 {/* Live preview of the hovered service */}
                 <div className="col-span-4 flex flex-col gap-4">
                   {previewService && (
-                    <Link
+                    <Link onClick={closeForNavigation}
                       href={href(`services/${previewService.slug}`)}
                       className="group/preview relative block flex-1 overflow-hidden rounded-[24px] bg-[#ece6db]"
                     >
@@ -582,7 +604,7 @@ export default function Header({
                     <p className="text-[15px] text-white">{t.consultTitle}</p>
                     <p className="mt-1 text-[13px] leading-relaxed text-white/55">{t.consultText}</p>
                     <div className="mt-4 flex items-center gap-2">
-                      <Link
+                      <Link onClick={closeForNavigation}
                         href={href("book-online")} prefetch={false}
                         className="inline-flex h-10 items-center rounded-full bg-white px-4 text-[12px] font-semibold"
                       >
@@ -612,7 +634,7 @@ export default function Header({
             <div className="mx-auto max-w-[1520px] px-8 pb-8">
               <div className="ml-[calc(50%-330px)] grid w-[640px] grid-cols-2 gap-2 rounded-[28px] border border-black/[0.06] bg-white/95 p-3 shadow-[0_40px_120px_rgba(17,17,17,0.14)] backdrop-blur-xl">
                 {t.clinicLinks.map((item, i) => (
-                  <Link
+                  <Link onClick={closeForNavigation}
                     key={item.href}
                     href={href(item.href)}
                     className="bs-mega-col group/item flex items-start gap-4 rounded-[20px] p-4 transition-colors duration-200 hover:bg-[#f6f1e8]"
@@ -628,7 +650,7 @@ export default function Header({
                     <ArrowRight className="mt-1 h-4 w-4 -translate-x-1 text-[#b08b57] opacity-0 transition-all duration-300 group-hover/item:translate-x-0 group-hover/item:opacity-100" />
                   </Link>
                 ))}
-                <Link
+                <Link onClick={closeForNavigation}
                   href={href("book-online")} prefetch={false}
                   className="flex items-center justify-between gap-3 rounded-[20px] bg-[#111111] p-4"
                 >
@@ -711,7 +733,7 @@ export default function Header({
                                     <ul>
                                       {group.items.map((item) => (
                                         <li key={item.slug}>
-                                          <Link
+                                          <Link onClick={closeForNavigation}
                                             href={href(`services/${item.slug}`)}
                                             className="group flex items-center justify-between gap-3 border-b border-white/[0.06] py-3"
                                           >
@@ -725,7 +747,7 @@ export default function Header({
                                     </ul>
                                   </div>
                                 ))}
-                                <Link
+                                <Link onClick={closeForNavigation}
                                   href={href("services")}
                                   className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2.5 text-[13px]"
                                 >
@@ -737,7 +759,7 @@ export default function Header({
                               <ul className="pb-6 pl-10">
                                 {t.clinicLinks.map((item) => (
                                   <li key={item.href}>
-                                    <Link
+                                    <Link onClick={closeForNavigation}
                                       href={href(item.href)}
                                       className="group flex items-center justify-between gap-3 border-b border-white/[0.06] py-3"
                                     >
@@ -759,7 +781,7 @@ export default function Header({
 
                   {topLinks.map((item, i) => (
                     <li key={item.key} className="bs-m-item border-b border-white/[0.08]" style={{ ["--i" as string]: i + 3 }}>
-                      <Link href={href(item.key)} className="group flex items-center gap-4 py-5">
+                      <Link onClick={closeForNavigation} href={href(item.key)} className="group flex items-center gap-4 py-5">
                         <span className="w-6 text-[11px] font-semibold tracking-[0.1em] text-[#c9a35f]">
                           {String(i + 3).padStart(2, "0")}
                         </span>
@@ -782,12 +804,12 @@ export default function Header({
               </nav>
 
               <div className="mt-8 space-y-3">
-                <Link
+                <Link onClick={closeForNavigation}
                   href={href("book-online")} prefetch={false}
                   className="bs-m-item bs-m-book relative flex h-[60px] items-center justify-between overflow-hidden rounded-full pl-7 pr-2"
                   style={{ ["--i" as string]: 6 }}
                 >
-                  <span className="relative z-10 text-[14px] font-semibold uppercase tracking-[0.14em] text-[#0e0e0e]">
+                  <span className="relative z-10 text-[14px] font-semibold uppercase tracking-[0.14em] text-white">
                     {t.book}
                   </span>
                   <span className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full bg-[#0e0e0e]">
@@ -829,7 +851,7 @@ export default function Header({
                 <div className="bs-m-item flex items-center justify-between gap-3 pt-5" style={{ ["--i" as string]: 8 }}>
                   <div className="flex items-center rounded-full border border-white/10 bg-white/[0.04] p-1">
                     {LANGS.map((l) => (
-                      <Link
+                      <Link onClick={closeForNavigation}
                         key={l}
                         href={buildLangUrl(l)}
                         hrefLang={l}

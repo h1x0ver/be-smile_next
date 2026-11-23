@@ -3,14 +3,16 @@
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import SearchParamWatcher from "@/components/SearchParamWatcher";
 import Link from "next/link";
-import { CalendarDays, Search } from "lucide-react";
+import PageHeading from "@/components/PageHeading";
+import { ArrowUpRight, CalendarDays, Search, X, ChevronDown, ShieldCheck } from "lucide-react";
 import { AccordionCard } from "@/components/accordion-card";
+import styles from "./prices.module.css";
 
 
 type Lang = "ru" | "en" | "az";
 
 interface Translation {
-  language: Lang;
+  language?: Lang;
   service_name: string;
   description?: string;
 }
@@ -44,11 +46,7 @@ const ACCENTS = [
   { solid: "#a3785f", soft: "#f3ece7" },
 ];
 
-function StatNumber({ value, pad }: { value: number; pad?: boolean }) {
-  return <>{pad ? String(value).padStart(2, "0") : String(value)}</>;
-}
-
-function pickTranslation<T extends { language: Lang }>(
+function pickTranslation<T extends { language?: Lang }>(
   arr: T[] | undefined,
   lang: Lang
 ): T | null {
@@ -136,21 +134,11 @@ function PricesClientInner({
     return map;
   }, [categoryOrder]);
 
-  const categoryCounts = useMemo(() => {
-    const map = new Map<string, number>();
-    prices.forEach((item) => {
-      const catData = item.category ? categoryMap.get(item.category.id) : null;
-      const slug = catData?.slug ?? "uncategorized";
-      map.set(slug, (map.get(slug) ?? 0) + 1);
-    });
-    return map;
-  }, [prices, categoryMap]);
-
   const [q, setQ] = useState("");
   const deferredQuery = useDeferredValue(q);
   const [activeCat, setActiveCat] = useState<string>("all");
   const [highlight, setHighlight] = useState<string | null>(null);
-  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const isClickScrolling = useRef(false);
 
   const normalized = useMemo(() => {
@@ -257,356 +245,76 @@ function PricesClientInner({
   const bookHref = `/${lang}/book-online`;
 
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden bg-[#f8f6f1] text-[#111111]">
+    <div className={styles.page} data-prices-page>
       <SearchParamWatcher name="highlight" onValue={setHighlight} />
-      <div
-        className="fixed right-3 top-3 z-50 md:hidden sm:right-4 sm:top-4"
-      >
-        <Link
-          href={bookHref} prefetch={false}
-          aria-label={bookLabel}
-          className="group/btn relative inline-flex h-11 w-11 items-center justify-center overflow-hidden rounded-full text-white shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl sm:h-12 sm:w-12"
-          style={{ backgroundColor: "#b08b57" }}
-        >
-          <div className="absolute inset-0 rounded-full bg-black/0 transition-colors duration-300 group-hover/btn:bg-black/20" />
-          <div
-            className="relative z-10"
-          >
-            <CalendarDays className="h-5 w-5" strokeWidth={1.5} />
-          </div>
-        </Link>
-      </div>
-
-      <div className="pointer-events-none absolute inset-0 opacity-[0.04] [background-image:linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] [background-size:90px_90px]" />
-
-      <section className="relative overflow-hidden border-b border-black/8">
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute left-[-20%] top-[-20%] h-[260px] w-[260px] rounded-full bg-[radial-gradient(closest-side,rgba(217,199,162,0.15),transparent)] scale-[1.6] sm:left-[-8%] sm:top-[-30%] sm:h-[420px] sm:w-[420px]" />
-          <div className="absolute right-[-18%] top-[8%] h-[220px] w-[220px] rounded-full bg-[radial-gradient(closest-side,rgba(201,174,123,0.105),transparent)] scale-[1.6] sm:right-[-6%] sm:top-[10%] sm:h-[360px] sm:w-[360px]" />
-        </div>
-
-        <svg
-          aria-hidden
-          viewBox="0 0 200 200"
-          fill="none"
-          className="pointer-events-none absolute -bottom-10 -left-16 h-[220px] w-[220px] opacity-[0.08] sm:-bottom-16 sm:-left-20 sm:h-[320px] sm:w-[320px] lg:-bottom-24 lg:-left-16 lg:h-[560px] lg:w-[560px]"
-        >
-          <path
-            d="M14 82C14 82 55 152 100 152C145 152 186 82 186 82"
-            stroke="#b08b57"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-          />
-        </svg>
-
-        <div className="relative mx-auto w-full max-w-[1600px] px-4 pb-10 pt-16 sm:px-6 sm:pb-12 sm:pt-20 lg:px-16 lg:pb-16 lg:pt-24">
-          <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.18fr)_minmax(320px,0.82fr)] lg:items-stretch lg:gap-12">
-            <div
-              className="relative min-w-0"
-            >
-              <div
-                className="flex min-w-0 items-center gap-3 text-[10px] uppercase tracking-[0.22em] text-black/45 sm:text-[11px] sm:tracking-[0.32em]"
-              >
-                <span className="relative flex h-1.5 w-1.5 shrink-0">
-                  <span
-                    className="absolute inline-flex h-full w-full rounded-full bg-[#b08b57]"
-                    
-                    
-                  />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#b08b57]" />
-                </span>
-                <span className="truncate">BeSmile Dental Clinic - Baku</span>
-              </div>
-
-              <h1
-                className="mt-4 max-w-full break-words text-[38px] font-light leading-[0.95] tracking-[-0.02em] text-black sm:mt-5 sm:text-[52px] md:text-[72px] lg:text-[108px]"
-              >
-                {t("Прайс-лист", "Price list", "Qiymət siyahısı")}
-              </h1>
-
-              <p
-                className="mt-4 max-w-[560px] text-[14px] leading-relaxed text-black/60 sm:mt-6 sm:text-[15px] lg:text-[16px]"
-              >
-                {t(
-                  "Прозрачная стоимость лечения - без скрытых платежей. Точный план и полная смета уже на первой консультации.",
-                  "Transparent treatment pricing - no hidden costs. A precise plan and full estimate from your very first visit.",
-                  "Şəffaf müalicə qiyməti - gizli ödənişlər olmadan. İlk baxışdan dəqiq plan və smeta."
-                )}
-              </p>
-            </div>
-
-            <div
-              className="relative min-w-0 overflow-hidden rounded-[22px] bg-[#111111] p-4 sm:rounded-[28px] sm:p-6 lg:p-7"
-            >
-              <div className="pointer-events-none absolute inset-0">
-                <div className="absolute -right-16 -top-16 h-[220px] w-[220px] rounded-full bg-[radial-gradient(closest-side,rgba(217,199,162,0.09),transparent)] scale-[1.6]" />
-                <div className="absolute inset-0 opacity-[0.05] [background-image:linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] [background-size:64px_64px]" />
-                <div className="absolute inset-0 rounded-[22px] ring-1 ring-inset ring-white/[0.06] sm:rounded-[28px]" />
-              </div>
-
-              <div className="relative min-w-0">
-                <div className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/40 sm:tracking-[0.24em]">
-                  {t("Коротко", "At a glance", "Qısaca")}
-                </div>
-
-                <div className="mt-4 grid grid-cols-2 gap-3">
-                  <div className="min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 transition-colors duration-300 hover:bg-white/[0.06]">
-                    <div className="text-[28px] font-light leading-none tabular-nums text-white sm:text-[30px]">
-                      <StatNumber value={normalized.length} pad />
-                    </div>
-                    <div className="mt-1.5 text-[9px] uppercase tracking-[0.15em] text-white/40 sm:tracking-[0.18em]">
-                      {t("Услуг", "Services", "Xidmət")}
-                    </div>
-                  </div>
-
-                  <div className="min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 transition-colors duration-300 hover:bg-white/[0.06]">
-                    <div className="text-[28px] font-light leading-none tabular-nums text-white sm:text-[30px]">
-                      <StatNumber value={categoryOrder.length} />
-                    </div>
-                    <div className="mt-1.5 text-[9px] uppercase tracking-[0.15em] text-white/40 sm:tracking-[0.18em]">
-                      {t("Направлений", "Categories", "Kateqoriya")}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-5 h-px w-full bg-white/10" />
-
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {categoryOrder.map((c) => {
-                    const accent = accentBySlug.get(c.slug);
-                    return (
-                      <button
-                        key={c.slug}
-                        type="button"
-                        onClick={() => scrollToCat(c.slug)}
-                        className="group inline-flex max-w-full items-center gap-1.5 rounded-full border border-white/12 bg-white/[0.04] py-1.5 pl-3 pr-2 text-[11px] text-white/68 transition-all duration-300 hover:border-white/25 hover:bg-white/[0.09] hover:text-white"
-                      >
-                        <span
-                          className="h-1.5 w-1.5 shrink-0 rounded-full transition-transform duration-300 group-hover:scale-125"
-                          style={{ backgroundColor: accent?.solid }}
-                        />
-                        <span className="max-w-[140px] truncate sm:max-w-[180px]">
-                          {c.name}
-                        </span>
-                        <span className="rounded-full bg-white/10 px-1.5 py-0.5 text-[9px] tabular-nums text-white/45 transition-colors duration-300 group-hover:bg-white/20 group-hover:text-white/70">
-                          {categoryCounts.get(c.slug) ?? 0}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <Link
-                  href={`/${lang}/book-online`} prefetch={false}
-                  className="group mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-4 py-3 text-center text-[10px] uppercase tracking-[0.16em] text-black transition duration-300 hover:bg-white/90 sm:text-[11px] sm:tracking-[0.2em]"
-                >
-                  <CalendarDays
-                    className="h-3.5 w-3.5 shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5"
-                    strokeWidth={1.8}
-                  />
-                  <span className="truncate">
-                    {t("Бесплатная консультация", "Free consultation", "Pulsuz konsultasiya")}
-                  </span>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="relative mx-auto min-h-[calc(100vh-200px)] w-full max-w-[1600px] px-4 py-6 sm:px-6 sm:py-8 md:px-8 lg:px-16 lg:py-16">
-        <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(240px,280px)_minmax(0,1fr)] lg:gap-10 xl:gap-12">
-          <aside className="min-w-0 lg:sticky lg:top-8 lg:h-fit">
-            <div className="relative w-full min-w-0">
-              <Search
-                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-black/30"
-                strokeWidth={1.8}
-              />
-              <input
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder={t("Поиск услуги...", "Search a service...", "Xidmət axtar...")}
-                aria-label={t("Поиск услуги", "Search a service", "Xidmət axtar")}
-                className="block w-full min-w-0 max-w-full rounded-2xl border border-black/10 bg-white px-4 py-3 pl-10 text-[13px] text-black placeholder:text-black/35 outline-none transition focus:border-black/25 focus:shadow-[0_10px_30px_rgba(0,0,0,0.06)]"
-              />
-            </div>
-
-            <nav
-              aria-label={t("Категории услуг", "Service categories", "Xidmət kateqoriyaları")}
-              className="mt-4 hidden min-w-0 flex-col gap-1.5 rounded-[20px] border border-black/8 bg-white p-2 md:flex"
-            >
-              {groups.map((g) => {
-                const isActive = activeCat === g.slug;
-                const accent = accentBySlug.get(g.slug);
-
-                return (
-                  <button
-                    key={g.slug}
-                    type="button"
-                    onClick={() => scrollToCat(g.slug)}
-                    aria-current={isActive ? "true" : undefined}
-                    className="group relative flex min-w-0 items-center gap-3 rounded-[16px] px-3 py-3 text-left text-[13px] transition-all duration-300"
-                    style={{
-                      backgroundColor: isActive ? "#111111" : "transparent",
-                    }}
-                  >
-                    <span
-                      className="h-2 w-2 shrink-0 rounded-full transition-transform duration-300"
-                      style={{
-                        backgroundColor: accent?.solid,
-                        transform: isActive ? "scale(1.3)" : "scale(1)",
-                      }}
-                    />
-                    <span
-                      className={`min-w-0 flex-1 truncate ${
-                        isActive ? "text-white" : "text-black/62 group-hover:text-black"
-                      }`}
-                    >
-                      {g.name}
-                    </span>
-                    <span
-                      className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] tabular-nums ${
-                        isActive
-                          ? "bg-white/15 text-white/70"
-                          : "bg-black/[0.04] text-black/40"
-                      }`}
-                    >
-                      {g.items.length}
-                    </span>
-                  </button>
-                );
-              })}
+      <div className={styles.container}>
+        <header className={styles.hero}>
+          <div className={styles.heroCopy}>
+            <nav className={styles.breadcrumb} aria-label={t("Навигация", "Breadcrumb", "Naviqasiya")}>
+              <Link href={`/${lang}`}>{t("Главная", "Home", "Ana səhifə")}</Link><span aria-hidden="true">/</span><span>{t("Цены", "Prices", "Qiymətlər")}</span>
             </nav>
+            <div className={styles.eyebrow}><span />BeSmile Dental Clinic · Baku</div>
+            <PageHeading>{t("Прайс-лист", "Price list", "Qiymət siyahısı")}</PageHeading>
+            <p className={styles.intro}>{t(
+              "Прозрачная стоимость лечения — без скрытых платежей. Точный план и полная смета уже на первой консультации.",
+              "Transparent treatment pricing — no hidden costs. A precise plan and full estimate from your very first visit.",
+              "Şəffaf müalicə qiyməti — gizli ödənişlər olmadan. İlk baxışdan dəqiq plan və smeta."
+            )}</p>
+            <div className={styles.heroDetails}>
+            <div className={styles.stats}>
+              <div><strong>{String(normalized.length).padStart(2, "0")}</strong><span>{t("услуг в прайсе", "services listed", "xidmət")}</span></div>
+              <div><strong>{categoryOrder.length}</strong><span>{t("направлений заботы", "areas of care", "istiqamət")}</span></div>
 
-            <div className="mt-4 flex gap-2 overflow-x-auto pb-1 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {groups.map((g) => (
-                <button
-                  key={g.slug}
-                  onClick={() => scrollToCat(g.slug)}
-                  className={`flex-none rounded-full px-3 py-2 text-[11px] whitespace-nowrap transition sm:px-4 sm:text-[12px] ${
-                    activeCat === g.slug
-                      ? "bg-black text-white"
-                      : "border border-black/10 bg-white text-black/55 hover:border-black/20"
-                  }`}
-                >
-                  {g.name}
-                </button>
-              ))}
             </div>
+            <div className={styles.planNote}><ShieldCheck size={24} strokeWidth={1.3} aria-hidden="true" /><p><strong>{t("Индивидуальный план", "Personalised treatment", "Fərdi müalicə planı")}</strong><span>{t("Стоимость после диагностики", "Costs confirmed after diagnostics", "Diaqnostikadan sonra dəqiq qiymət")}</span></p></div>
+            </div>
+          </div>
+          <aside className={styles.consultation}>
+            <svg className={styles.smile} viewBox="0 0 260 160" fill="none" aria-hidden="true"><path d="M15 25C55 165 205 165 245 25" stroke="currentColor" strokeWidth="1"/><path d="M40 20C75 130 185 130 220 20" stroke="currentColor" strokeWidth=".6"/></svg>
+            <div className={styles.cardTop}><span className={styles.cardLabel}>{t("ПЕРВЫЙ ВИЗИТ В BESMILE", "YOUR FIRST VISIT TO BESMILE", "BESMILE-A İLK VİZİTİNİZ")}</span><span className={styles.consultIcon}><CalendarDays size={22} strokeWidth={1.3} aria-hidden="true" /></span></div>
+            <div className={styles.cardContent}>
+              <h2>{t("Консультация и план лечения", "Consultation & treatment plan", "Konsultasiya və müalicə planı")}</h2>
+              <p>{t("Врач подберёт план лечения и уточнит стоимость на бесплатной консультации.", "Your doctor will tailor your treatment plan and confirm the cost at a free consultation.", "Həkim pulsuz konsultasiyada müalicə planını hazırlayacaq və qiyməti dəqiqləşdirəcək.")}</p>
+            </div>
+            <Link href={bookHref} prefetch={false} className={styles.primaryLink}><span>{t("Бесплатная консультация", "Free consultation", "Pulsuz konsultasiya")}</span><ArrowUpRight size={19} aria-hidden="true" /></Link>
+          </aside>
+        </header>
 
-            <div className="mt-4 overflow-hidden rounded-[18px] border border-black/8 bg-[#111111] p-4 sm:mt-5 sm:rounded-[20px] sm:p-5 md:p-6">
-              <div className="text-[12px] font-light leading-5 text-white/85 sm:text-[13px] sm:leading-6 md:text-[14px]">
-                {t(
-                  "Не уверены, что выбрать?",
-                  "Not sure what to pick?",
-                  "Nə seçəcəyinizə əminsiniz?"
-                )}
-              </div>
-              <p className="mt-1.5 text-[11px] leading-5 text-white/40 sm:text-[12px]">
-                {t(
-                  "Врач подберёт план на бесплатной консультации.",
-                  "Our doctor will build a plan at a free consultation.",
-                  "Həkim pulsuz konsultasiyada plan hazırlayacaq."
-                )}
-              </p>
-              <Link
-                href={`/${lang}/book-online`} prefetch={false}
-                className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-white px-4 py-3 text-center text-[10px] uppercase tracking-[0.18em] text-black transition hover:bg-white/90 sm:text-[10.5px] md:mt-5 md:text-[11px]"
-              >
-                <CalendarDays className="h-3.5 w-3.5 shrink-0" strokeWidth={1.8} />
-                <span className="truncate">
-                  {t("Консультация", "Consultation", "Konsultasiya")}
-                </span>
-              </Link>
+        <div className={styles.catalog} id="price-catalog">
+          <aside className={styles.sidebar}>
+            <div className={styles.sidebarInner}>
+              <div className={styles.sidebarHeading}><span>{t("Направления", "Categories", "İstiqamətlər")}</span><span>{String(groups.length).padStart(2, "0")}</span></div>
+              <nav aria-label={t("Категории услуг", "Service categories", "Xidmət kateqoriyaları")} className={styles.categoryNav}>
+                {groups.map((group, index) => <button key={group.slug} type="button" onClick={() => scrollToCat(group.slug)} aria-current={activeCat === group.slug ? "true" : undefined}>
+                  <span className={styles.categoryIndex}>{String(index + 1).padStart(2, "0")}</span><span>{group.name}</span><span className={styles.categoryCount}>{group.items.length}</span>
+                </button>)}
+              </nav>
+              <div className={styles.sidebarHelp}><p>{t("Каждая улыбка индивидуальна. План лечения — тоже.", "Every smile is individual. Your treatment plan is too.", "Hər gülüş fərdidir. Müalicə planınız da elə.")}</p><a href="tel:+994704210204">+994 70 421 02 04<ArrowUpRight size={16} aria-hidden="true" /></a></div>
             </div>
           </aside>
 
-          <div className="relative min-w-0 min-h-[600px]" aria-busy={q !== deferredQuery}>
-            <div className="mb-5 flex items-center justify-between gap-3 text-[12px] text-black/50">
-              <p role="status" aria-live="polite" aria-atomic="true">
-                {t("Найдено услуг", "Services found", "Tapılan xidmətlər")}: {filtered.length}
-              </p>
-              {q && (
-                <button type="button" onClick={() => setQ("")} className="min-h-11 shrink-0 rounded-full border border-black/10 bg-white px-4 text-black/70 hover:border-black/25 focus-visible:outline-2 focus-visible:outline-offset-2">
-                  {t("Сбросить поиск", "Clear search", "Axtarışı sıfırla")}
-                </button>
-              )}
+          <main className={styles.main} aria-label={t("Стоимость услуг", "Service prices", "Xidmət qiymətləri")}>
+            <div className={styles.searchTools}>
+              <div className={styles.searchBox}><Search size={20} strokeWidth={1.5} aria-hidden="true" /><input id="price-search" type="search" value={q} onChange={e => setQ(e.target.value)} placeholder={t("Найти услугу в прайсе", "Find a service", "Xidmət axtarın")} aria-label={t("Поиск услуги", "Search a service", "Xidmət axtar")} />{q && <button type="button" onClick={() => setQ("")} aria-label={t("Сбросить поиск", "Clear search", "Axtarışı sıfırla")}><X size={18} aria-hidden="true" /></button>}</div>
+              <div className={styles.mobileCategories}><label htmlFor="price-category">{t("Направление", "Category", "İstiqamət")}</label><div><select id="price-category" value={groups.some(g => g.slug === activeCat) ? activeCat : ""} onChange={e => scrollToCat(e.target.value)}><option value="" disabled>{t("Выбрать направление", "Choose a category", "İstiqamət seçin")}</option>{groups.map(g => <option key={g.slug} value={g.slug}>{g.name} ({g.items.length})</option>)}</select><ChevronDown size={16} aria-hidden="true" /></div></div>
             </div>
-            {groups.length === 0 ? (
-              <div className="rounded-2xl border border-black/8 bg-white px-6 py-14 text-center sm:px-8 sm:py-16">
-                <p className="text-[14px] text-black/50 sm:text-[15px]">
-                  {t(
-                    "По вашему запросу ничего не найдено.",
-                    "No services found for your search.",
-                    "Axtarışınız üçün heç bir xidmət tapılmadı."
-                  )}
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-8 sm:space-y-10 lg:space-y-14">
-                {groups.map((group) => {
-                  const accent = accentBySlug.get(group.slug);
-
-                  return (
-                    <div
-                      key={group.slug}
-                      ref={(el) => {
-                        sectionRefs.current[group.slug] = el;
-                      }}
-                      data-slug={group.slug}
-                      className="min-w-0 scroll-mt-20 sm:scroll-mt-24"
-                    >
-                      <div
-                        className="mb-5 flex min-w-0 items-center gap-3 sm:mb-6 sm:gap-4"
-                      >
-                        <span
-                          className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-[12px] font-medium text-white sm:h-11 sm:w-11 sm:rounded-2xl sm:text-[13px]"
-                          style={{ backgroundColor: accent?.solid }}
-                        >
-                          {String(group.items.length).padStart(2, "0")}
-                        </span>
-
-                        <h2 className="min-w-0 truncate text-[20px] font-light leading-none tracking-[-0.01em] text-black sm:text-[28px] md:text-[32px] lg:text-[36px]">
-                          {group.name}
-                        </h2>
-
-                        <div
-                          className="h-px min-w-[20px] flex-1 origin-left bg-black/10"
-                        />
-                      </div>
-
-                      <div className="overflow-hidden rounded-[16px] border border-black/8 bg-white divide-y divide-black/6 sm:rounded-[24px] lg:rounded-[28px]">
-                        {group.items.map((item, index) => {
-                          const tr = getTranslation(item);
-                          const localBookLabel = t("Записаться", "Book", "Yazıl");
-                          const localBookHref = `/${lang}/book-online?message=${encodeURIComponent(
-                            buildBookingMessage(tr.service_name)
-                          )}`;
-
-                          return (
-                            <AccordionCard
-                              key={item.id}
-                              id={`price-${item.anchor}`}
-                              index={index}
-                              title={tr.service_name}
-                              price={formatPrice(item.price, item.is_from_price)}
-                              description={
-                                tr.description || undefined
-                              }
-                              accentColor={accent?.solid ?? "#b08b57"}
-                              bookHref={localBookHref}
-                              bookLabel={localBookLabel}
-                              isLast={index === group.items.length - 1}
-                            />
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+            <div className={styles.resultsLine}><p role="status" aria-live="polite" aria-atomic="true">{t("Найдено услуг", "Services found", "Tapılan xidmətlər")}: <strong>{filtered.length}</strong></p><span>{t("СТОИМОСТЬ В AZN", "PRICES IN AZN", "QİYMƏTLƏR AZN İLƏ")}</span></div>
+            <div aria-busy={q !== deferredQuery} className={styles.groups}>
+              {groups.length === 0 ? <div className={styles.empty}><Search size={28} strokeWidth={1.2} aria-hidden="true" /><h2>{t("Услуги не найдены", "No services found", "Xidmət tapılmadı")}</h2><p>{t("Попробуйте другое название или сбросьте поиск.", "Try a different name or clear your search.", "Başqa ad sınayın və ya axtarışı sıfırlayın.")}</p><button type="button" onClick={() => setQ("")}>{t("Сбросить поиск", "Clear search", "Axtarışı sıfırla")}</button></div> : groups.map((group, groupIndex) => {
+                const accent = accentBySlug.get(group.slug);
+                return <section key={group.slug} ref={el => { sectionRefs.current[group.slug] = el; }} data-slug={group.slug} className={styles.priceGroup} aria-labelledby={`category-${makeAnchor(group.slug)}`}>
+                  <header className={styles.groupHeader}><div><span className={styles.groupIndex}>{String(groupIndex + 1).padStart(2, "0")}</span><h2 id={`category-${makeAnchor(group.slug)}`}>{group.name}</h2></div><span className={styles.groupCount}>{group.items.length}</span></header>
+                  <div className={styles.priceTable}>
+                    {group.items.map((item, index) => {
+                      const tr = getTranslation(item);
+                      return <AccordionCard key={item.id} id={`price-${item.anchor}`} index={index} title={tr.service_name} price={formatPrice(item.price, item.is_from_price)} description={tr.description || undefined} accentColor={accent?.solid ?? "#b08b57"} bookHref={`${bookHref}?message=${encodeURIComponent(buildBookingMessage(tr.service_name))}`} bookLabel={bookLabel} isLast={index === group.items.length - 1} />;
+                    })}
+                  </div>
+                </section>;
+              })}
+            </div>
+            <div className={styles.priceNote}><span aria-hidden="true">*</span><p>{t("Окончательная стоимость зависит от клинической ситуации и определяется после диагностики. Уточнить детали и составить индивидуальный план можно на консультации.", "The final cost depends on your clinical situation and is confirmed after diagnostics. Your consultation is an opportunity to discuss the details and create an individual treatment plan.", "Yekun qiymət klinik vəziyyətdən asılıdır və diaqnostikadan sonra müəyyən edilir. Konsultasiyada ətraflı məlumat və fərdi müalicə planı əldə edə bilərsiniz.")}</p></div>
+          </main>
         </div>
       </div>
     </div>
